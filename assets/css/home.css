@@ -1,18 +1,31 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
 
 :root
 {
-    --white: #fff;
+    /* dark */
+    --darkb: #3B4252;
+    --darkm: #434C5E;
+    --darkl: #4C566A;
+    /* light */
+    --lightb: #D8DEE9;
+    --lightm: #E5E9F0;
+    --lightl: #ECEFF4;
+
+    /* text */
+    --text: #2E3440;
     --color-text: #1e1919;
+
+    --white: #fff;
+
     --border: #dfdcd8;
-    --grey: #f5f5f5;
+    --border-faint: #a6917133;
     --black1: #222;
     --black2: #999;
 }
@@ -36,6 +49,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
+    background: var(--lightb);
     border-bottom: 1px solid var(--border);
 }
 
@@ -65,6 +79,7 @@ body {
     line-height: 50px;
     text-align: start;
     white-space: nowrap;
+    font-size: 16px;
     font-weight: bold;
     color: var(--black1);
 }
@@ -114,4 +129,82 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Sidebar */
+
+.sidebar {
+    position: fixed;
+    width: 240px;
+    height: calc(100% - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--border);
+    background-color: var(--lightl);
+    overflow: hidden;
+    
+}
+
+.sidebar ul {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.sidebar ul li {
+    position: relative;
+    width: 200%;
+    list-style: none;
+}
+
+.sidebar ul li:hover {
+    background: var(--lightb);
+}
+
+.sidebar ul li a {
+    position: relative;
+    display: block;
+    width: 100%;
+    display: flex;
+    text-decoration: none;  
+}
+
+.sidebar ul li a .link_name {
+    position: relative;
+    display: block;
+    padding: 0 40px;
+    height: 50px;
+    line-height: 50px;
+    text-align: start;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--black1);
+}
+
+.cloud-space {
+    position: relative;
+    padding: 24px 0 32px 32px;
+    border-top: 1px solid var(--border-faint);
+}
+
+.cloud-space .link_name {
+    position: relative;
+    display: block;
+    text-align: start;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--black1);
+}
+
+.cloud-space .loader {
+    width: 80%;
+    height: 5px;
+    margin-bottom: 8px;
+    background-color: rgb(116, 46, 206);
+	color: rgb(255, 255, 255);
 }
