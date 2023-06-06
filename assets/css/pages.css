@@ -1,0 +1,28 @@
+/* Breadcrumb  */
+
+.breadcrumb {
+    padding: 16px 16px 0 32px;
+    height: 40px;
+    width: 100%;
+    font-weight: 600;
+}
+
+.breadcrumb_item {
+    height: 26px;
+    display: inline-block;
+}
+
+.breadcrumb_item:not(:last-of-type)::after {
+    content: '/';
+    margin: 0 5px;
+    color: var(--darkl);
+}
+
+.breadcrumb_link {
+    text-decoration: none;
+    color: var(--darkb);
+}
+
+.breadcrumb_link:hover {
+    text-decoration: underline;
+}

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/pages.css">
     <title>RainCloud</title>
 </head>
 <body>
@@ -59,7 +60,9 @@
             </div>
         </div>
         <div class="main">
-            
+            <?php
+            require_once '../RainCloud/pages/home.php';
+            ?>
         </div>
     </div>
 </body>
