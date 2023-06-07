@@ -1,3 +1,14 @@
+:root {
+    /* buttons */
+    --btn-primary: #0582ca;
+    --btn-primary-lt: #00a6fb;
+    --btn-secondary: #3B4252;
+
+    --darkb: #3B4252;
+    --darkm: #434C5E;
+    --darkl: #4C566A;
+}
+
 /* Breadcrumb  */
 
 .breadcrumb {
@@ -25,4 +36,46 @@
 
 .breadcrumb_link:hover {
     text-decoration: underline;
+}
+
+/* Nav-toolbar */
+.nav_toolbar {
+    position: sticky;
+    display: flex;
+    height: 64px;
+    padding: 16px 0 16px 32px;
+    margin-top: -1px;
+    top: -1px;
+    width: 50%;
+}
+
+.action_toolbar {
+    display: flex;
+    width: 100%;
+    margin: -3px;
+    padding: 3px;
+    overflow: hidden;
+}
+
+.btn {
+    height: 32px;
+    width: 120px;
+    margin-right: 32px;
+    cursor: pointer;
+    color: #eee;
+    font-size: 15px;
+    font-weight: 500;
+    background: var(--btn-primary);
+    border: none;
+}
+
+.btn:nth-child(2) {
+    background: var(--darkb);
+}
+
+.btn:nth-child(2):hover {
+    background: var(--darkl);
+}
+.btn:hover {
+    background: var(--btn-primary-lt);
 }
