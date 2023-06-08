@@ -1,3 +1,17 @@
+:root {
+    /* buttons */
+    --btn-primary: #0582ca;
+    --btn-primary-lt: #00a6fb;
+    --btn-secondary: #3B4252;
+
+    --darkb: #3B4252;
+    --darkm: #434C5E;
+    --darkl: #4C566A;
+
+    --box-shadow: 0px 8px 32px #1e191908,0px 8px 16px #1e191908,0px 4px 8px #1e191908,0px 2px 4px #1e191908,0px 1px 2px #1e191908;;
+    --border2: #dfdcd8;
+}
+
 /* Breadcrumb  */
 
 .breadcrumb {
@@ -25,4 +39,78 @@
 
 .breadcrumb_link:hover {
     text-decoration: underline;
+}
+
+/* Nav-toolbar */
+.nav_toolbar {
+    position: sticky;
+    display: flex;
+    height: 64px;
+    padding: 16px 0 16px 32px;
+    margin-top: -1px;
+    top: -1px;
+    width: 50%;
+}
+
+.action_toolbar {
+    display: flex;
+    width: 100%;
+    margin: -3px;
+    padding: 3px;
+}
+
+.select {
+    padding-right: 32px;
+}
+
+.btn {
+    height: 32px;
+    width: 120px;
+    margin-right: 32px;
+    cursor: pointer;
+    color: #eee;
+    font-size: 15px;
+    font-weight: 500;
+    border: 1px solid var(--darkl);
+    background: var(--btn-primary);
+}
+
+.btn:hover {
+    background: var(--btn-primary-lt);
+}
+
+.sub-menu {
+    position: absolute;
+    width: 236px;
+    margin-top: 4px;
+    padding: 8px 0;
+    list-style: none;
+    border: 1px solid var(--lightb);
+    box-shadow: var(--box-shadow);
+    background: var(--lightb);
+}
+
+.sub-menu li {
+    padding: 10px 20px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.sub-menu li i {
+    justify-content: center;
+    padding-right: 4px;
+}
+
+.sub-menu li a {
+    color: #222;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.sub-menu li:hover {
+    background-color: var(--lightl);
+}
+
+.hide {
+    display: none;
 }

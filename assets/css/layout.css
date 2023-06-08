@@ -21,13 +21,14 @@
     /* text */
     --text: #2E3440;
     --color-text: #1e1919;
-
-    --white: #fff;
-
+    /* border */
     --border: #dfdcd8;
     --border-faint: #a6917133;
+    /* basic  */
+    --white: #fff;
     --black1: #222;
     --black2: #999;
+    
 }
 
 body {
