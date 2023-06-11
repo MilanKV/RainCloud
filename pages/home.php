@@ -15,7 +15,7 @@
         </li>
     </ul>
 </div>
-<!-- home  -->
+<!-- Home  -->
 <div class="home-content">
     <!-- ActionToolbar  -->
     <div class="nav_toolbar">
@@ -59,6 +59,142 @@
                     <strong>Drop files here to upload,</strong> or use the 'Upload' button
                 </span>
             </div>
+        </div>
+    </div>
+    <div class="table-content">
+        <div class="selectable-list">
+            <table class="table-sortable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>
+                            <span>Name</span>
+                            <i class='bx bx-up-arrow-alt arrow'></i>
+                        </th>
+                        <th>
+                            File Size
+                            <i class='bx bx-up-arrow-alt arrow'></i>
+                        </th>
+                        <th>
+                            Modified
+                            <i class='bx bx-up-arrow-alt arrow'></i>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2</td>
+                        <td>a</td>
+                        <td>123</td>
+                        <td>01/24/2018</td>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>b</td>
+                        <td>321</td>
+                        <td>01/24/2019</td>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>c</td>
+                        <td>415</td>
+                        <td>01/24/2020</td>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>b</td>
+                        <td>321</td>
+                        <td>01/24/2019</td>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>b</td>
+                        <td>321</td>
+                        <td>01/24/2019</td>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>b</td>
+                        <td>321</td>
+                        <td>01/24/2019</td>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>b</td>
+                        <td>321</td>
+                        <td>01/24/2019</td>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>b</td>
+                        <td>321</td>
+                        <td>01/24/2019</td>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>b</td>
+                        <td>321</td>
+                        <td>01/24/2019</td>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>b</td>
+                        <td>321</td>
+                        <td>01/24/2019</td>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

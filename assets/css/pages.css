@@ -10,6 +10,7 @@
 
     --box-shadow: 0px 8px 32px #1e191908,0px 8px 16px #1e191908,0px 4px 8px #1e191908,0px 2px 4px #1e191908,0px 1px 2px #1e191908;;
     --border2: #dfdcd8;
+    --border-faint: #a6917133; 
     --dot-border: #a69e9299;
     --text-lt: #736c64;
 }
@@ -21,6 +22,7 @@
     height: 40px;
     width: 100%;
     font-weight: 600;
+    overflow: hidden;
 }
 
 .breadcrumb_item {
@@ -43,6 +45,9 @@
     text-decoration: underline;
 }
 
+.home-content {
+    width: 100%;
+}
 /* Nav-toolbar */
 .nav_toolbar {
     position: sticky;
@@ -59,10 +64,6 @@
     width: 100%;
     margin: -3px;
     padding: 3px;
-}
-
-.select {
-    padding-right: 32px;
 }
 
 .btn {
@@ -123,8 +124,6 @@
     position: relative;
     width: 100%;
     height: 80px;
-    margin-right: 32px;
-    margin-left: 32px;
     z-index: 0;
 }
 
@@ -135,11 +134,13 @@
     border: 2px solid var(--dot-border);
     border-style: dotted;
     box-sizing: border-box;
+    margin: 0 32px 0 32px;
     top: 1px;
     right: 1px;
     bottom: 1px;
     left: 1px;
     pointer-events: none;
+    overflow: hidden;
     z-index: 1100;
 }
 
@@ -158,4 +159,48 @@
     font-weight: 400;
     line-height: 24px;
     color: var(--text-lt);
+}
+
+/* Table  */
+
+.selectable-list {
+    padding-top: 30px;
+} 
+
+.selectable-list .table-sortable {
+    position: relative;
+    padding-bottom: 80px;
+    font-size: 14px;
+    border-collapse: collapse;
+    min-width: 400px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.selectable-list .table-sortable thead tr {
+    text-align: left;
+} 
+
+.selectable-list .table-sortable th,
+.selectable-list .table-sortable td {
+    padding: 12px 15px;
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-faint);
+}
+
+.selectable-list .table-sortable th:hover:not(:first-child, :last-child) {
+    border-left: 2px solid var(--border-faint);
+    border-right: 2px solid var(--border-faint);
+}
+
+.table-sortable tbody tr:hover {
+    background-color: var(--lightb);
+}
+
+.table-sortable thead tr th i {
+    color: var(--darkb);
+    text-align: center;
+    font-size: 16px;
+    line-height: 20px;
 }
