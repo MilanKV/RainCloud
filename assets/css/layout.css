@@ -147,7 +147,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     border-right: 1px solid var(--border);
-    background-color: var(--lightl);
+    background-color: var(--lightm);
     overflow: hidden;
 }
 
@@ -224,5 +224,5 @@ body {
     min-height: 100vh;
     left: 240px;
     top: 50px;
-    background: var(--lightm);
+    background: var(--lightl);
 }
