@@ -41,3 +41,26 @@ document.querySelectorAll(".table-sortable th:not(:first-child):not(:last-child)
         sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
     });
 });
+
+// PreventDefault on tBody(row), MenuContent Overlay show/hide on tBody(row)
+
+const menuContent = {
+
+    show:function(e) {
+        e.preventDefault();
+
+        let menu = document.getElementById("menuContent");
+        menu.style.left = e.clientX -240 + "px";  // sidebar 240
+        menu.style.top = e.clientY -50 + "px";   // nav 50
+        menu.classList.remove("hidden");
+    },
+    hide:function() {
+        let menu = document.getElementById("menuContent");
+        menu.classList.add("hidden");
+    },
+
+};
+
+window.addEventListener("click", function() {
+    menuContent.hide();
+});

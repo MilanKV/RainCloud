@@ -83,7 +83,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody oncontextmenu="menuContent.show(event)">
                     <tr>
                         <td><input type="checkbox" class="select"></td>
                         <td>a</td>
@@ -112,7 +112,7 @@
     </div>
 </div>
 <!-- Menu Content -->
-<div id="menuContent" class="menu-content hidden">
+<div id="menuContent" class="menu-content hidden" oncontextmenu="event.preventDefault()">
     <div class="menu-container">
         <div class="menu-heading">
             <div class="menu-item">
