@@ -83,7 +83,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody oncontextmenu="menuContent.show(event)">
+                <tbody oncontextmenu="menuContent.show(event)" onclick="table.select(event)">
                     <tr>
                         <td><input type="checkbox" class="select"></td>
                         <td>a</td>
