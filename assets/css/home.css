@@ -200,7 +200,8 @@
     border-right: 2px solid var(--border-faint);
 }
 
-.table-sortable tbody tr:hover {
+.table-sortable tbody tr:hover,
+.table-sortable tbody .row {
     background-color: var(--lightb);
 }
 
