@@ -41,3 +41,52 @@ document.querySelectorAll(".table-sortable th:not(:first-child):not(:last-child)
         sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
     });
 });
+
+const menuContent = {
+
+    // PreventDefault on tBody(row), MenuContent Overlay show/hide on tBody(row)
+    show:function(e) {
+        e.preventDefault();
+
+        let menu = document.getElementById("menuContent");
+        menu.style.left = e.clientX -240 + "px";  // sidebar 240
+        menu.style.top = e.clientY -50 + "px";   // nav 50
+        menu.classList.remove("hidden");
+
+        table.select(e);
+    },
+    hide:function() {
+        let menu = document.getElementById("menuContent");
+        menu.classList.add("hidden");
+    },
+};
+
+const table = {
+
+    selected: null,
+
+    select:function(e) {
+
+        table.selected = null;
+
+        for (var i = 0; i < e.currentTarget.children.length; i++) {
+            e.currentTarget.children[i].classList.remove("row");
+        }
+
+        // Find body and tr element
+        let item = e.target;
+        while(item.tagName != 'TR' && item.tagName != 'BODY') {
+            item = item.parentNode;
+        }
+
+        // Select tr, add class row to tr
+        if(item.tagName == 'TR') {
+            table.selected = item;
+            table.selected.classList.add("row");
+        }    
+    },
+};
+
+window.addEventListener("click", function() {
+    menuContent.hide();
+});
