@@ -21,17 +21,8 @@
     <div class="nav_toolbar">
         <div class="action_toolbar">
             <div class="select">
-                <button class="btn">Upload <i class='bx bx-chevron-down'></i></button>
-                <ul class="sub-menu hidden">
-                    <li>
-                        <i class='bx bx-folder' ></i>
-                        <a href="#">Folder</a>
-                    </li>
-                    <li>
-                        <i class='bx bx-file-blank'></i>
-                        <a href="#">File</a>
-                    </li>
-                </ul>
+                <button class="btn" onclick="upload.uploadBtn()">Upload <i class='bx bx-chevron-down'></i></button>
+                <input onchange="upload.send(this.files)" type="file" id="file-upload" class="hidden" multiple>
             </div>
             <div class="select">
                 <button class="btn">Create <i class='bx bx-chevron-down'></i></button>
@@ -48,7 +39,8 @@
             </div>
         </div>
     </div>
-    <div class="drop-upload">
+    <!-- Drag and drop  -->
+    <div class="drop-upload" ondrop="upload.drop(event)" ondragover="upload.dragOver(event)" ondragleave="upload.dropZone.removeHighlight()">
         <div class="drop-zone">
             <div class="drop-text">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(115, 108, 100, 1);">

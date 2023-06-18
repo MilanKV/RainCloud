@@ -51,7 +51,7 @@
             </ul>
             <div class="cloud-space">
                 <span class="link_name">Cloud Space</span>
-                <div class="loader"></div>
+                <div class="progress-space"></div>
                 <div class="space">2GB of 15GB used
                     <a href="">
                         <i class='bx bx-plus-circle'></i>

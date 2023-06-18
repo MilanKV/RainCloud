@@ -150,6 +150,11 @@
     z-index: 1100;
 }
 
+.drop-zone-highlight{
+    border: 2px solid #4a44ea;
+    border-style: dotted;
+}
+
 .drop-text {
     position: relative;
     margin: auto;

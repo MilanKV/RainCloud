@@ -32,6 +32,7 @@ function sortTableByColumn(table, column, asc = true) {
     headerCell.classList.toggle("th-sort-desc", !asc);
 }
 
+// Select all table header cells that are sortable (excluding the first and last columns)
 document.querySelectorAll(".table-sortable th:not(:first-child):not(:last-child)").forEach(headerCell => {
     headerCell.addEventListener("click", () => {
         const tableElement = headerCell.closest("table");
@@ -44,13 +45,12 @@ document.querySelectorAll(".table-sortable th:not(:first-child):not(:last-child)
 
 const menuContent = {
 
-    // PreventDefault on tBody(row), MenuContent Overlay show/hide on tBody(row)
     show:function(e) {
         e.preventDefault();
 
-        let menu = document.getElementById("menuContent");
-        menu.style.left = e.clientX -240 + "px";  // sidebar 240
-        menu.style.top = e.clientY -50 + "px";   // nav 50
+        let menu = document.getElementById("menuContent"); 
+        menu.style.left = e.clientX -240 + "px";  // sidebar 240 Horizontal position
+        menu.style.top = e.clientY -50 + "px";   // nav 50  Vertical position
         menu.classList.remove("hidden");
 
         table.select(e);
@@ -63,29 +63,108 @@ const menuContent = {
 
 const table = {
 
-    selected: null,
+    selected: null, // Currently selected table row
 
     select:function(e) {
 
-        table.selected = null;
+        table.selected = null; // Reset the selected row
 
+        // Remove "row" class from all children elements of the table row container
         for (var i = 0; i < e.currentTarget.children.length; i++) {
             e.currentTarget.children[i].classList.remove("row");
         }
 
-        // Find body and tr element
         let item = e.target;
+
+        // Traverse up the DOM tree to find the nearest "tr" or "body" element
         while(item.tagName != 'TR' && item.tagName != 'BODY') {
             item = item.parentNode;
         }
 
-        // Select tr, add class row to tr
+        // If a "tr" element is found, select it by adding the "row" class
         if(item.tagName == 'TR') {
             table.selected = item;
             table.selected.classList.add("row");
         }    
     },
 };
+
+const upload = {
+
+    // Function to trigger the file upload
+    uploadBtn: function() {
+        document.getElementById("file-upload").click();
+    },
+
+    // Function to handle the file upload process
+    send: function(files) {
+
+        if(upload.uploading) {
+            alert("Please wait for the upload to complete!");
+            return;
+        }
+
+        // Upload multiple files using FormData
+        upload.uploading = true;
+
+        let myform = new FormData();
+
+        for(var i = 0; i < files.length; i++) {
+            
+            myform.append('file'+i, files[i]);
+        }
+
+        let xm = new XMLHttpRequest();
+        
+        xm.addEventListener('error', function(e) {
+            alert("An error occured! Please check your connection");
+
+        });
+
+        // Handle changes in the request state
+        xm.addEventListener('readystatechange', function() {
+            if(xm.readyState == 4)
+            {
+                if(xm.status == 200)
+                {
+                    alert(xm.responseText);
+                } else {
+                    console.log(xm.responseText);
+                    alert("An error occured! Please try again later");
+                }
+
+                upload.uploading = false;
+            }    
+        });
+
+        // Open a POST request api.php and send the FormData
+        xm.open('post', 'api.php', true);
+        xm.send(myform);
+    },
+
+    // Dropzone highlight functionality
+    dropZone: {
+        highlight: function() {
+            document.querySelector(".drop-upload").classList.add("drop-zone-highlight");
+        },
+        removeHighlight: function() {
+            document.querySelector(".drop-upload").classList.remove("drop-zone-highlight");
+        }
+    },
+ 
+    // Handle the drop event for the dropzone
+    drop: function(e) {
+        e.preventDefault();
+        upload.dropZone.removeHighlight();
+        upload.send(e.dataTransfer.files);
+    },
+
+    // Handle the dragover event for the dropzone
+    dragOver: function(e) {
+        e.preventDefault();
+        upload.dropZone.highlight();
+    },
+}
 
 window.addEventListener("click", function() {
     menuContent.hide();
