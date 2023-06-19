@@ -21,17 +21,8 @@
     <div class="nav_toolbar">
         <div class="action_toolbar">
             <div class="select">
-                <button class="btn">Upload <i class='bx bx-chevron-down'></i></button>
-                <ul class="sub-menu hidden">
-                    <li>
-                        <i class='bx bx-folder' ></i>
-                        <a href="#">Folder</a>
-                    </li>
-                    <li>
-                        <i class='bx bx-file-blank'></i>
-                        <a href="#">File</a>
-                    </li>
-                </ul>
+                <button class="btn" onclick="upload.uploadBtn()">Upload</button>
+                <input onchange="upload.send(this.files)" type="file" id="file-upload" class="hidden" multiple>
             </div>
             <div class="select">
                 <button class="btn">Create <i class='bx bx-chevron-down'></i></button>
@@ -48,7 +39,8 @@
             </div>
         </div>
     </div>
-    <div class="drop-upload">
+    <!-- Drag and drop  -->
+    <div class="drop-upload" ondrop="upload.drop(event)" ondragover="upload.dragOver(event)" ondragleave="upload.dropZone.removeHighlight()">
         <div class="drop-zone">
             <div class="drop-text">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(115, 108, 100, 1);">
@@ -83,8 +75,8 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody oncontextmenu="menuContent.show(event)" onclick="table.select(event)">
-                    <tr>
+                <tbody class="table-body" oncontextmenu="menuContent.show(event)" onclick="table.select(event)">
+                    <!-- <tr>
                         <td><input type="checkbox" class="select"></td>
                         <td>a</td>
                         <td>123</td>
@@ -94,18 +86,7 @@
                                 <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
                             </svg>
                         </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" class="select"></td>
-                        <td>b</td>
-                        <td>321</td>
-                        <td>01/24/2019</td>
-                        <td>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" transform="rotate(90)" style="fill: rgba(0, 0, 0, 1);">
-                                <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
-                            </svg>
-                        </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>

@@ -206,9 +206,9 @@ body {
     color: var(--black1);
 }
 
-.cloud-space .loader {
+.cloud-space .progress-space {
     width: 80%;
-    height: 5px;
+    height: 6px;
     margin-bottom: 8px;
     background-color: rgb(116, 46, 206);
 	color: rgb(255, 255, 255);
