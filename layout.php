@@ -29,22 +29,22 @@
         <div class="sidebar">
             <ul>
                 <li>
-                    <a href="#">
+                    <a href="?page=home">
                         <span class="link_name">Home</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="?page=favorites">
                         <span class="link_name">Favorites</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#"> 
+                    <a href="?page=shared"> 
                         <span class="link_name">Shared</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#"> 
+                    <a href="?page=deleted"> 
                         <span class="link_name">Deleted Files</span>
                     </a>
                 </li>      
@@ -61,7 +61,27 @@
         </div>
         <div class="main">
             <?php
-            require_once '../RainCloud/pages/home.php';
+            // Default home if no page parameter is provided
+            $page = $_GET['page'] ?? 'home';
+
+            if(!isset($_GET['page']) && empty($_SERVER['QUERY_STRING']))
+            {
+                header("Location: layout.php?page={$page}");
+            }
+            // Define an array of allowed pages
+            $allowedPages = ['home', 'favorites', 'shared', 'deleted'];
+            if(in_array($page, $allowedPages)) 
+            {
+                $contentFile = "../RainCloud/pages/{$page}.php";
+                if(file_exists($contentFile))
+                {
+                    require_once $contentFile;
+                } else {
+                    echo "Page not found.";
+                } 
+            } else {
+                echo "Invalid page.";
+            }
             ?>
         </div>
     </div>

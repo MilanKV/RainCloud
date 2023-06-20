@@ -75,7 +75,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody class="table-body" oncontextmenu="menuContent.show(event)" onclick="table.select(event)">
+                <tbody id="table-body" class="table-body" oncontextmenu="menuContent.show(event)" onclick="table.select(event)" ondrop="upload.drop(event)" ondragover="upload.dragOver(event)" ondragleave="upload.dropZone.removeHighlight()">
                     <!-- <tr>
                         <td><input type="checkbox" class="select"></td>
                         <td>a</td>

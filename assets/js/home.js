@@ -67,28 +67,39 @@ const menuContent = {
 const table = {
 
     selected: null, // Currently selected table row
+    selected_id: null,
 
     select:function(e) 
     {
+        let = old_selected_id = table.selected_id;
 
         table.selected = null; // Reset the selected row
+        table.selected_id = null;
 
         // Remove "row" class from all children elements of the table row container
-        for (var i = 0; i < e.currentTarget.children.length; i++) {
-            e.currentTarget.children[i].classList.remove("row");
+        let tbody = document.getElementById("table-body");
+        for (var i = 0; i < tbody.children.length; i++) 
+        {
+            tbody.children[i].classList.remove("row");
         }
 
-        let item = e.target;
+        let item = e.target; 
 
         // Traverse up the DOM tree to find the nearest "tr" or "body" element
-        while(item.tagName != 'TR' && item.tagName != 'BODY') {
+        while(item.tagName != 'TR' && item.tagName != 'BODY') 
+        {
             item = item.parentNode;
         }
 
         // If a "tr" element is found, select it by adding the "row" class
-        if(item.tagName == 'TR') {
-            table.selected = item;
-            table.selected.classList.add("row");
+        if(item.tagName == 'TR') 
+        {
+            if(old_selected_id == null || item.getAttribute('id') != old_selected_id)
+            {
+                table.selected = item;
+                table.selected_id = item.getAttribute('id');
+                table.selected.classList.add("row");
+            }
         }    
     },
 
@@ -114,6 +125,8 @@ const table = {
                         for(var i = 0; i < obj.rows.length; i++)
                         {
                             let tr = document.createElement('tr');
+                            tr.setAttribute('id','tr_'+i);
+
                             tr.innerHTML = `
                                 <td><input type="checkbox" class="select"></td>
                                 <td>${obj.rows[i].file_name}</td>
@@ -216,10 +229,12 @@ const upload = {
         highlight: function() 
         {
             document.querySelector(".drop-upload").classList.add("drop-zone-highlight");
+            document.querySelector(".table-body").classList.add("drop-zone-highlight");
         },
         removeHighlight: function() 
         {
             document.querySelector(".drop-upload").classList.remove("drop-zone-highlight");
+            document.querySelector(".table-body").classList.remove("drop-zone-highlight");
         }
     },
  
