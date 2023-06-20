@@ -194,10 +194,24 @@
 
 .selectable-list .table-sortable th,
 .selectable-list .table-sortable td {
+    min-height: 39px;
+    max-width: 450px;
     padding: 12px 15px;
     text-decoration: none;
     cursor: pointer;
     border-bottom: 1px solid var(--border-faint);
+}
+
+.selectable-list .table-sortable th:first-child,
+.selectable-list .table-sortable td:first-child {
+    min-height: 39px;
+    max-width: 85px;
+}
+
+.selectable-list .table-sortable th:last-child,
+.selectable-list .table-sortable td:last-child {
+    min-height: 39px;
+    max-width: 85px;
 }
 
 .selectable-list .table-sortable th:hover:not(:first-child, :last-child) {
