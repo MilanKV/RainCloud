@@ -20,11 +20,11 @@
     <!-- ActionToolbar  -->
     <div class="nav_toolbar">
         <div class="action_toolbar">
-            <div class="select">
+            <div class="brws-buttons">
                 <button class="btn" onclick="upload.uploadBtn()">Upload</button>
                 <input onchange="upload.send(this.files)" type="file" id="file-upload" class="hidden" multiple>
             </div>
-            <div class="select">
+            <div class="brws-buttons">
                 <button class="btn">Create <i class='bx bx-chevron-down'></i></button>
                 <ul class="sub-menu hidden">
                     <li>
@@ -59,7 +59,7 @@
             <table class="table-sortable">
                 <thead>
                     <tr>
-                        <th><label for="SelectAll"><input type="checkbox" class="select"></label></th>
+                        <th><input type="checkbox" id="selectAll" class="select" onchange="table.toggleAll(event)"></th>
                         <th>
                             <span>Name</span>
                             <i class='bx bx-up-arrow-alt arrow'></i>
