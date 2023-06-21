@@ -66,23 +66,8 @@ const menuContent = {
 
 const table = {
 
-    selected: null, // Currently selected table row
-    selected_id: null,
-
     select:function(e) 
     {
-        let = old_selected_id = table.selected_id;
-
-        table.selected = null; // Reset the selected row
-        table.selected_id = null;
-
-        // Remove "row" class from all children elements of the table row container
-        let tbody = document.getElementById("table-body");
-        for (var i = 0; i < tbody.children.length; i++) 
-        {
-            tbody.children[i].classList.remove("row");
-        }
-
         let item = e.target; 
 
         // Traverse up the DOM tree to find the nearest "tr" or "body" element
@@ -94,13 +79,32 @@ const table = {
         // If a "tr" element is found, select it by adding the "row" class
         if(item.tagName == 'TR') 
         {
-            if(old_selected_id == null || item.getAttribute('id') != old_selected_id)
+            let checkbox = item.querySelector('.select');
+            checkbox.checked = !checkbox.checked;
+
+            if(checkbox.checked)
             {
-                table.selected = item;
-                table.selected_id = item.getAttribute('id');
-                table.selected.classList.add("row");
+                item.classList.add("row");
+            } else {
+                item.classList.remove("row");
             }
         }    
+    },
+
+    toggleAll:function(e) 
+    {
+        let checkboxes = document.getElementsByClassName("select");
+        for(var i = 0; i < checkboxes.length; i++)
+        {
+            checkboxes[i].checked = e.target.checked;
+            let item = checkboxes[i].parentNode.parentNode;
+            if(e.target.checked)
+            {
+                item.classList.add("row");
+            } else {
+                item.classList.remove("row");
+            }
+        }
     },
 
     refresh: function() 
@@ -128,11 +132,12 @@ const table = {
                             tr.setAttribute('id','tr_'+i);
 
                             tr.innerHTML = `
-                                <td><input type="checkbox" class="select"></td>
+                                <td><input type="checkbox" class="select" onchange="table.select(event)"></td>
                                 <td>${obj.rows[i].file_name}</td>
                                 <td>${obj.rows[i].file_size}</td>
                                 <td>${obj.rows[i].date_updated}</td>
-                                <td><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" transform="rotate(90)" style="fill: rgba(0, 0, 0, 1);">
+                                <td>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" transform="rotate(90)" style="fill: rgba(0, 0, 0, 1);">
                                         <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
                                     </svg>
                                 </td>
