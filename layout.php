@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         <div class="nav">
-            <a href="#">
+            <a href="?page=home">
                 <i class='bx bx-cloud-light-rain'></i>
                 <span class="title">RainCloud</span>
             </a>
@@ -83,6 +83,65 @@
                 echo "Invalid page.";
             }
             ?>
+        </div>
+        <div class="file-details-panel">
+            <div class="title-container">
+                <span class="file-title">
+                    File Details
+                </span>
+            </div>
+            <div class="header-container"></div>
+            <div class="no-file-checked">
+                <i class='bx bx-info-square'></i>
+                <span class="title">
+                    No File was Selected
+                </span>
+            </div>
+            <div class="body-container hidden">
+                <div class="info">
+                    <div class="info-header">
+                        <div class="left-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);">
+                                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
+                                <path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>
+                            </svg>
+                        </div>
+                        <div class="right-title">
+                            <span>Info</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="file-detail">
+                    <div class="icon-container">
+                        <a href="">
+                            <img src="">
+                        </a>
+                    </div>
+                    <div class="details">
+                        <span>Properties</span>
+                        <div id="file_name" class="properties">
+                            <span class="title">Name</span>
+                            <span class="file_name"></span>
+                        </div>
+                        <div id="size" class="properties">
+                            <span class="title">Size</span>
+                            <span class="size"></span>
+                        </div>
+                        <div id="type" class="properties">
+                            <span class="title">Type</span>
+                            <span class="type"></span>
+                        </div>
+                        <div id="created" class="properties">
+                            <span class="title">Added</span>
+                            <span class="date_created"></span>
+                        </div>
+                        <div id="updated" class="properties">
+                            <span class="title">Modified</span>
+                            <span class="date_updated"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="./assets/js/home.js"></script>

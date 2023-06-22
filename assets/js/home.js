@@ -66,6 +66,8 @@ const menuContent = {
 
 const table = {
 
+    ROWS: [],
+
     select:function(e) 
     {
         let item = e.target; 
@@ -85,8 +87,11 @@ const table = {
             if(checkbox.checked)
             {
                 item.classList.add("row");
+                let id = item.getAttribute('id').replace("tr_", "");
+                file_details.show(id);
             } else {
                 item.classList.remove("row");
+                file_details.hide();
             }
         }    
     },
@@ -126,6 +131,8 @@ const table = {
                     let obj = JSON.parse(xm.responseText);
                     if(obj.success && obj.data_type == "get_files")
                     {
+                        table.ROWS = obj.rows;
+            
                         for(var i = 0; i < obj.rows.length; i++)
                         {
                             let tr = document.createElement('tr');
@@ -258,6 +265,30 @@ const upload = {
         upload.dropZone.highlight();
     },
 }
+
+var file_details = {
+    
+    show:function(id) 
+    {
+        document.querySelector(".no-file-checked").classList.add("hidden");
+        let row = table.ROWS[id];
+        
+        let file_details_panel = document.querySelector(".body-container");
+        
+        file_details_panel.querySelector(".file_name").textContent = row.file_name;
+        file_details_panel.querySelector(".size").textContent = row.file_size;
+        file_details_panel.querySelector(".type").textContent = row.file_type;
+        file_details_panel.querySelector(".date_created").textContent = row.date_created;
+        file_details_panel.querySelector(".date_updated").textContent = row.date_updated;
+        file_details_panel.classList.remove("hidden");
+    },
+
+    hide:function()
+    {
+        document.querySelector(".no-file-checked").classList.remove("hidden");
+        document.querySelector(".body-container").classList.add("hidden");
+    },
+};
 
 table.refresh();
 
