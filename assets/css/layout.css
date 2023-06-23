@@ -28,6 +28,7 @@
     --white: #fff;
     --black1: #222;
     --black2: #999;
+    --btn-primary: #0582ca;
     
 }
 
@@ -73,6 +74,8 @@ body {
     line-height: 50px;
     text-align: end;
     font-size: 2em;
+    font-weight: 500;
+    color: var(--btn-primary);
 }
 
 .nav a .title {
@@ -210,7 +213,7 @@ body {
     width: 80%;
     height: 6px;
     margin-bottom: 8px;
-    background-color: rgb(116, 46, 206);
+    background-color: var(--btn-primary);
 	color: rgb(255, 255, 255);
 }
 
@@ -220,9 +223,192 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
-    width: calc(100% - 240px);
+    width: calc(100% - 240px - 240px);
     min-height: 100vh;
     left: 240px;
     top: 50px;
     background: var(--lightl);
+}
+
+/* file-details-panel */
+
+.file-details-panel {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    right: 0;
+    bottom: 0;
+    width: 240px;
+    height: calc(100% - 50px);
+    border-left: 1px solid var(--border);
+    background-color: var(--lightm);
+}
+
+.file-details-panel .title-container {
+    display: flex;
+    align-items: center;
+    padding-left: 16px;
+    padding-right: 12px;
+    min-height: 56px;
+    justify-content: space-between;
+}
+
+.title-container .file-title {
+    position: relative;
+    display: block;
+    padding: 0 10px;
+    height: 50px;
+    line-height: 50px;
+    text-align: start;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--black1);
+}
+
+.file-details-panel .body-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.body-container .info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.body-container .info .info-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    cursor: default;
+}
+
+.body-container .info .info-header .left-icon {
+    color: var(--black1);
+    display: flex;
+    flex-shrink: 0;
+    margin-right: 8px;
+}
+
+.body-container .info .info-header .right-title {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.body-container .info .info-header .right-title span {
+    color: var(--black1);
+    line-height: 18px;
+    box-sizing: border-box;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.body-container .file-detail {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0 16px 16px;
+    margin-bottom: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.body-container .file-detail .icon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 168px;
+}
+
+.body-container .file-detail .icon-container a {
+    display: flex;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+}
+
+.body-container .file-detail .icon-container a img {
+    display: block;
+    box-sizing: border-box;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    filter: none;
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--border);
+}
+
+.body-container .file-detail .details {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.body-container .file-detail .details span {
+    margin-bottom: 4px;
+    color: var(--black1);
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 20px;
+    text-decoration: none;
+}
+
+.body-container .file-detail .details .properties {
+    display: flex;
+}
+
+.body-container .file-detail .details .properties .title {
+    display: flex;
+    width: 92px;
+    color: var(--black2);
+}
+
+.body-container .file-detail .details .properties .data {
+    display: flex;
+    align-items: center;
+    margin-left: 16px;
+    height: 24px;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.file-details-panel .no-file-checked {
+    display: flex;
+    flex-direction: row;
+    border-top: 1px solid var(--border);
+}
+
+.file-details-panel .no-file-checked i {
+    position: relative;
+    display: block;
+    min-width: 60px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 2em;
+    font-weight: 500;
+}
+
+.file-details-panel .no-file-checked .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--black1);
+}
+
+.file-details-panel .hidden {
+    display: none;
 }

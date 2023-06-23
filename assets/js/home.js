@@ -66,33 +66,71 @@ const menuContent = {
 
 const table = {
 
+    ROWS: [],
+
+    // Function to handle row selection
     select:function(e) 
     {
-        let item = e.target; 
+        const item = e.target.closest('tr'); 
+        const checkbox = item.querySelector('.select');
+        const isChecked = checkbox.checked;
 
-        // Traverse up the DOM tree to find the nearest "tr" or "body" element
-        while(item.tagName != 'TR' && item.tagName != 'BODY') 
+        // Handle row selection
+        if (item && e.target.tagName !== 'INPUT') 
         {
-            item = item.parentNode;
-        }
-
-        // If a "tr" element is found, select it by adding the "row" class
-        if(item.tagName == 'TR') 
+            const selectedRow = document.querySelector('.row');
+            // Deselect the row if it's already selected
+            if (selectedRow && selectedRow === item) 
+            {
+              selectedRow.classList.remove('row');
+              checkbox.checked = false;
+              file_details.hide();
+            } else {
+                // Select the clicked row and show file details
+                if(selectedRow) 
+                {
+                    selectedRow.classList.remove('row');
+                    selectedRow.querySelector('.select').checked = false;
+                }
+                item.classList.add('row');
+                checkbox.checked = true;
+                let id = item.getAttribute('id').replace("tr_", "");
+                file_details.show(id);
+            }
+        } 
+        // Handle checkbox interaction
+        else if(item && e.target.tagName === 'INPUT')
         {
-            let checkbox = item.querySelector('.select');
-            checkbox.checked = !checkbox.checked;
+            checkbox.checked = isChecked;
 
+            // Toggle row selection and show/hide file details based on checkbox state
             if(checkbox.checked)
             {
-                item.classList.add("row");
+                item.classList.add('row');
+                let id = item.getAttribute('id').replace("tr_", "");
+                file_details.show(id);
             } else {
-                item.classList.remove("row");
+                item.classList.remove('row');
+                file_details.hide();
             }
-        }    
+
+            // Uncheck other rows if unchecking the checkbox
+            const isUnchecking = isChecked && !checkbox.checked;
+
+            if (isUnchecking) {
+                const selectedRow = document.querySelector('.row');
+                if (selectedRow === item) {
+                    file_details.hide();
+                }
+                selectedRow.classList.remove('row');
+                selectedRow.querySelector('.select').checked = false;
+            }
+        }
     },
 
     toggleAll:function(e) 
     {
+        // Toggle the checked state of all checkboxes and corresponding row styling
         let checkboxes = document.getElementsByClassName("select");
         for(var i = 0; i < checkboxes.length; i++)
         {
@@ -126,6 +164,9 @@ const table = {
                     let obj = JSON.parse(xm.responseText);
                     if(obj.success && obj.data_type == "get_files")
                     {
+                        table.ROWS = obj.rows;
+            
+                        // Generate table rows dynamically
                         for(var i = 0; i < obj.rows.length; i++)
                         {
                             let tr = document.createElement('tr');
@@ -258,6 +299,32 @@ const upload = {
         upload.dropZone.highlight();
     },
 }
+
+var file_details = {
+    
+    show:function(id) 
+    {
+        document.querySelector(".no-file-checked").classList.add("hidden");
+        let row = table.ROWS[id];
+        
+        let file_details_panel = document.querySelector(".body-container");
+        
+        // Update the file details in the panel
+        file_details_panel.querySelector(".file_name").textContent = row.file_name;
+        file_details_panel.querySelector(".size").textContent = row.file_size;
+        file_details_panel.querySelector(".type").textContent = row.file_type;
+        file_details_panel.querySelector(".date_created").textContent = row.date_created;
+        file_details_panel.querySelector(".date_updated").textContent = row.date_updated;
+
+        file_details_panel.classList.remove("hidden");
+    },
+
+    hide:function()
+    {
+        document.querySelector(".no-file-checked").classList.remove("hidden");
+        document.querySelector(".body-container").classList.add("hidden");
+    },
+};
 
 table.refresh();
 
