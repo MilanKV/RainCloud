@@ -7,6 +7,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/home.css">
+    <script src="https://kit.fontawesome.com/dd14b1184b.js" crossorigin="anonymous"></script>
     <title>RainCloud</title>
 </head>
 <body>
@@ -114,7 +115,8 @@
                 <div class="file-detail">
                     <div class="icon-container">
                         <a href="">
-                            <img src="">
+                            <img id="file_image" src="">
+                            <i id="file_icon"></i>
                         </a>
                     </div>
                     <div class="details">

@@ -174,6 +174,7 @@ const table = {
 
                             tr.innerHTML = `
                                 <td><input type="checkbox" class="select" onchange="table.select(event)"></td>
+                                <td>${obj.rows[i].icon}</td>
                                 <td>${obj.rows[i].file_name}</td>
                                 <td>${obj.rows[i].file_size}</td>
                                 <td>${obj.rows[i].date_updated}</td>
@@ -204,11 +205,14 @@ const table = {
 
 const upload = {
 
+    uploading: false,
+
     // Function to trigger the file upload
     uploadBtn: function() 
     {
         document.getElementById("file-upload").click();
     },
+
 
     // Function to handle the file upload process
     send: function(files) 
@@ -308,8 +312,24 @@ var file_details = {
         let row = table.ROWS[id];
         
         let file_details_panel = document.querySelector(".body-container");
-        
+        const fileImage = document.getElementById("file_image");
+        const fileIcon = document.getElementById("file_icon");
+
+        // Check the file type and display the appropriate content
+        if (row.file_type.startsWith("image/")) {
+            // It's an image file, show the image element
+            fileImage.style.display = "block";
+            fileIcon.style.display = "none";
+            fileImage.src = row.file_path;
+        } else {
+            // It's not an image file, show the icon element
+            fileImage.style.display = "none";
+            fileIcon.style.display = "block";
+            fileIcon.innerHTML = row.icon;
+        }
+
         // Update the file details in the panel
+        // fileImage.src = row.file_path;
         file_details_panel.querySelector(".file_name").textContent = row.file_name;
         file_details_panel.querySelector(".size").textContent = row.file_size;
         file_details_panel.querySelector(".type").textContent = row.file_type;
@@ -326,9 +346,19 @@ var file_details = {
     },
 };
 
+const createButton = document.getElementById("createButton");
+const createMenu = document.getElementById("createMenu");  
+
+createButton.addEventListener("click", function() {
+    createMenu.classList.toggle("hidden");
+});
+
 table.refresh();
 
 window.addEventListener("click", function() 
 {
     menuContent.hide();
+    if (!createButton.contains(event.target) && !createMenu.contains(event.target)) {
+        createMenu.classList.add("hidden");
+    }
 });

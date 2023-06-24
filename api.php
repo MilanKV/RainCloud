@@ -3,6 +3,7 @@
 session_start();
 require_once __DIR__ . '/database.php';
 require_once __DIR__ . '/helpers.php';
+require_once __DIR__ . '/file_icons.php';
 
 $info = [
     'success' => false,
@@ -55,12 +56,14 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
             {
                 foreach ($rows as $key => $row) 
                 {
+                    $rows[$key]['icon'] = get_icon($row['file_type']);
                     $rows[$key]['file_size'] = round($row['file_size'] / (1024 * 1024)) . "MB";
                     if($rows[$key]['file_size'] == "0MB") 
                     {
                         $rows[$key]['file_size'] = round($row['file_size'] / (1024)) . "kB";
                     }
                     $rows[$key]['date_updated'] = get_date($row['date_updated']);
+                    $rows[$key]['date_created'] = get_date($row['date_created']);
                 }
                 
                 $info['rows'] = $rows;

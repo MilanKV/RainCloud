@@ -336,7 +336,8 @@ body {
     outline: none;
 }
 
-.body-container .file-detail .icon-container a img {
+.body-container .file-detail .icon-container a img,
+.body-container .file-detail .icon-container a i {
     display: block;
     box-sizing: border-box;
     max-width: 100%;
@@ -347,6 +348,9 @@ body {
     margin: auto;
     padding: 0;
     border: 1px solid var(--border);
+}
+.body-container .file-detail .icon-container a i {
+    color: var(--black1);
 }
 
 .body-container .file-detail .details {
