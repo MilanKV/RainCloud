@@ -25,16 +25,38 @@
                 <input onchange="upload.send(this.files)" type="file" id="file-upload" class="hidden" multiple>
             </div>
             <div class="brws-buttons">
-                <button class="btn">Create <i class='bx bx-chevron-down'></i></button>
-                <ul class="sub-menu hidden">
-                    <li>
-                        <i class='bx bx-folder' ></i>
-                        <a href="#">Folder</a>
-                    </li>
-                    <li>
-                        <i class='bx bx-file-blank'></i>
-                        <a href="#">File</a>
-                    </li>
+                <button class="btn" id="createButton">Create <i class='bx bx-chevron-down'></i></button>
+                <ul class="sub-menu hidden" id="createMenu">
+                    <div class="menu-item">
+                        <li>
+                            <a href="#">
+                                <div class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);">
+                                        <path d="M20 5h-8.586L9.707 3.293A.997.997 0 0 0 9 3H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2zM4 19V7h16l.002 12H4z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div class="title">
+                                    Folder
+                                </div>
+                            </a>
+                        </li>
+                    </div>
+                    <div class="menu-item">
+                        <li>
+                            <a href="#">
+                                <div class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);">
+                                        <path d="m12 16 4-5h-3V4h-2v7H8z"></path>
+                                        <path d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7z"></path>
+                                    </svg>
+                                </div>
+                                <div class="title">
+                                    Word Document
+                                </div>
+                            </a>
+                        </li>
+                    </div>
                 </ul>
             </div>
         </div>
@@ -60,6 +82,7 @@
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="selectAll" class="select" onchange="table.toggleAll(event)"></th>
+                        <th></th>
                         <th>
                             <span>Name</span>
                             <i class='bx bx-up-arrow-alt arrow'></i>
@@ -78,6 +101,7 @@
                 <tbody id="table-body" class="table-body" oncontextmenu="menuContent.show(event)" onclick="table.select(event)" ondrop="upload.drop(event)" ondragover="upload.dragOver(event)" ondragleave="upload.dropZone.removeHighlight()">
                     <!-- <tr>
                         <td><input type="checkbox" class="select"></td>
+                        <td></td>
                         <td>a</td>
                         <td>123</td>
                         <td>01/24/2018</td>
