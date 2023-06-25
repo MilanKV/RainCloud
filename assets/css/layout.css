@@ -28,7 +28,7 @@
     --white: #fff;
     --black1: #222;
     --black2: #999;
-    --btn-primary: #0582ca;
+    --btn-primary: #5E81AC;
     
 }
 
@@ -127,6 +127,7 @@ body {
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
+    border: 1.5px solid var(--btn-primary);
 }
 
 .nav .profile-details img {
@@ -215,6 +216,10 @@ body {
     margin-bottom: 8px;
     background-color: var(--btn-primary);
 	color: rgb(255, 255, 255);
+}
+
+.cloud-space .space a i {
+    color: var(--btn-primary);
 }
 
 /* main */
@@ -350,7 +355,7 @@ body {
     border: 1px solid var(--border);
 }
 .body-container .file-detail .icon-container a i {
-    color: var(--black1);
+    color: var(--darkm);
 }
 
 .body-container .file-detail .details {

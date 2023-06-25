@@ -198,7 +198,7 @@ const table = {
         });
 
         // Open a POST request api.php and send the FormData
-        xm.open('post', 'api.php', true);
+        xm.open('post', '../api.php', true);
         xm.send(myform);
     },
 };
@@ -269,7 +269,7 @@ const upload = {
         });
 
         // Open a POST request api.php and send the FormData
-        xm.open('post', 'api.php', true);
+        xm.open('post', '../api.php', true);
         xm.send(myform);
     },
 
@@ -316,20 +316,18 @@ var file_details = {
         const fileIcon = document.getElementById("file_icon");
 
         // Check the file type and display the appropriate content
-        if (row.file_type.startsWith("image/")) {
+        if (row.file_type.startsWith("image/jpeg")) {
             // It's an image file, show the image element
             fileImage.style.display = "block";
             fileIcon.style.display = "none";
-            fileImage.src = row.file_path;
+            fileImage.src = "../" +  row.file_path;
         } else {
             // It's not an image file, show the icon element
             fileImage.style.display = "none";
             fileIcon.style.display = "block";
             fileIcon.innerHTML = row.icon;
         }
-
         // Update the file details in the panel
-        // fileImage.src = row.file_path;
         file_details_panel.querySelector(".file_name").textContent = row.file_name;
         file_details_panel.querySelector(".size").textContent = row.file_size;
         file_details_panel.querySelector(".type").textContent = row.file_type;

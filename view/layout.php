@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/layout.css">
+    <link rel="stylesheet" href="../assets/css/home.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="assets/css/layout.css">
-    <link rel="stylesheet" href="assets/css/home.css">
     <script src="https://kit.fontawesome.com/dd14b1184b.js" crossorigin="anonymous"></script>
     <title>RainCloud</title>
 </head>
@@ -24,7 +24,7 @@
                 </label>
             </div>
             <div class="profile-details">
-                <img src="assets/image/avatar.png" alt="">
+                <img src="../assets/image/avatar.png" alt="">
             </div>
         </div>
         <div class="sidebar">
@@ -73,7 +73,7 @@
             $allowedPages = ['home', 'favorites', 'shared', 'deleted'];
             if(in_array($page, $allowedPages)) 
             {
-                $contentFile = "../RainCloud/pages/{$page}.php";
+                $contentFile = "../view/pages/{$page}.php";
                 if(file_exists($contentFile))
                 {
                     require_once $contentFile;
@@ -146,6 +146,6 @@
             </div>
         </div>
     </div>
-    <script src="./assets/js/home.js"></script>
+    <script src="../assets/js/home.js"></script>
 </body>
 </html>

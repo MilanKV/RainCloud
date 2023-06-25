@@ -1,7 +1,7 @@
 :root {
     /* buttons */
-    --btn-primary: #0582ca;
-    --btn-primary-lt: #00a6fb;
+    --btn-primary: #5E81AC;
+    --btn-primary-lt: #6f97c9;
     --btn-secondary: #3B4252;
 
     --darkb: #3B4252;
@@ -248,6 +248,7 @@
     min-height: 39px;
     max-width: 39px;
     place-items: center;
+    color: var(--darkm);
 }
 
 .selectable-list .table-sortable th:hover:not(:first-child, :nth-child(2), :last-child) {
