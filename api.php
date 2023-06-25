@@ -1,9 +1,9 @@
 <?php
 
 session_start();
-require_once __DIR__ . '/database.php';
-require_once __DIR__ . '/helpers.php';
-require_once __DIR__ . '/file_icons.php';
+require_once __DIR__ . '/functions/database.php';
+require_once __DIR__ . '/functions/helpers.php';
+require_once __DIR__ . '/functions/file_icons.php';
 
 $info = [
     'success' => false,
