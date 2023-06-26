@@ -1,5 +1,3 @@
-var LOGGED_IN = false;
-var USERNAME = false;
 /**
  *  Sorts a HTML table.
  * 
@@ -163,26 +161,9 @@ const table = {
                     let tbody = document.querySelector(".table-body");
                     tbody.innerHTML = "";
 
-                    
                     let obj = JSON.parse(xm.responseText);
-
-                    // Display Name
-                    if(!USERNAME) 
-                    {
-                        USERNAME = obj.name;
-                        document.querySelector(".user_name").innerHTML = obj.name;
-                    }
-
-                    // Check if user is logged-in
-                    LOGGED_IN = obj.LOGGED_IN;
-                    if(!LOGGED_IN) {
-
-                        window.location.href = 'auth/login.php';
-                    }
-                    
                     if(obj.success && obj.data_type == "get_files")
                     {
-
                         table.ROWS = obj.rows;
             
                         // Generate table rows dynamically

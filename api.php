@@ -7,17 +7,7 @@ require_once __DIR__ . '/functions/file_icons.php';
 
 $info = [
     'success' => false,
-    'LOGGED_IN' => is_logged_in(),
-    'name' => $_SESSION['RAIN_USER']['name'] ?? 'User',
-    'data_type' => $_POST['data_type'] ?? '',
 ];
-
-$without_login = ['user_signup', 'user_login'];
-if(!$info['LOGGED_IN'] && (!in_array($info['data_type'], $without_login)))
-{
-    echo json_encode($info);
-    die;
-}
 
 if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
 
@@ -49,132 +39,37 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
             $date_created = date("Y-m-d H:i:s");
             $date_updated = date("Y-m-d H:i:s");
 
-            $query = "INSERT INTO drive 
+            $query = "insert into drive 
             (file_name, file_size, file_type, file_path, user_id, date_created, date_updated) 
-            VALUES ('$file_name', '$file_size', '$file_type', '$file_path', '$user_id', '$date_created', '$date_updated')";
+            values ('$file_name', '$file_size', '$file_type', '$file_path', '$user_id', '$date_created', '$date_updated')";
 
             query($query);
 
             $info['success'] = true;
         }
-    } else 
-    if($_POST['data_type'] == "get_files") 
-    {
-        $query = "SELECT * FROM drive ORDER BY id DESC LIMIT 25";
-        $rows = query($query);
-        if($rows)
+    } else {
+        if($_POST['data_type'] == "get_files") 
         {
-            foreach ($rows as $key => $row) 
+            $query = "select * from drive order by id desc limit 25";
+            $rows = query($query);
+            if($rows)
             {
-                $rows[$key]['icon'] = get_icon($row['file_type']);
-                $rows[$key]['file_size'] = round($row['file_size'] / (1024 * 1024)) . "MB";
-                if($rows[$key]['file_size'] == "0MB") 
+                foreach ($rows as $key => $row) 
                 {
-                    $rows[$key]['file_size'] = round($row['file_size'] / (1024)) . "kB";
+                    $rows[$key]['icon'] = get_icon($row['file_type']);
+                    $rows[$key]['file_size'] = round($row['file_size'] / (1024 * 1024)) . "MB";
+                    if($rows[$key]['file_size'] == "0MB") 
+                    {
+                        $rows[$key]['file_size'] = round($row['file_size'] / (1024)) . "kB";
+                    }
+                    $rows[$key]['date_updated'] = get_date($row['date_updated']);
+                    $rows[$key]['date_created'] = get_date($row['date_created']);
                 }
-                $rows[$key]['date_updated'] = get_date($row['date_updated']);
-                $rows[$key]['date_created'] = get_date($row['date_created']);
-            }
-            
-            $info['rows'] = $rows;
-            $info['success'] = true;
-        }
-    } else
-    if($_POST['data_type'] == "user_signup") 
-    {
-        // Save to database
-        $email = addslashes($_POST['email']);
-        $name = addslashes($_POST['name']);
-        $password = addslashes($_POST['password']);
-        $password_confirmation = addslashes($_POST['password_confirmation']);
-        $date_created = date("Y-m-d H:i:s");
-        $date_updated = date("Y-m-d H:i:s");
-
-        // Validate data
-        $errors = [];
-
-        if (empty($name) || !preg_match("/^[a-zA-Z ]+$/", $name)) 
-        {
-            $errors['name'] = "Invalid name";
-        }
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = "Invalid email address";
-        } elseif (query("SELECT id FROM users WHERE email = '$email' LIMIT 1")) {
-            $errors['email'] = "Email already exists";
-        }
-
-        if (empty($password)) {
-            $errors['password'] = "Password is required";
-        } elseif (strlen($password) < 8) {
-            $errors['password'] = "Password must be at least 8 characters";
-        }
-
-        if ($password !== $password_confirmation) {
-            $errors['password_confirmation'] = "Passwords do not match";
-        }
-
-        if (empty($name) && empty($email) && empty($password) && empty($password_confirmation)) {
-            $errors['empty_inputs'] = "Please fill in all the fields";
-        }
-
-        if(empty($errors))
-        {
-            $password = password_hash($password, PASSWORD_DEFAULT);
-
-            $query = "INSERT INTO users 
-            (name, email, password, date_created, date_updated) 
-            VALUES ('$name', '$email', '$password', '$date_created', '$date_updated')";
-    
-            query($query);
-    
-            $info['success'] = true;  
-        }
-        $info['errors'] = $errors;
-
-    } else
-    if($_POST['data_type'] == "user_login") 
-    {
-        // Save to database
-        $email = addslashes($_POST['email']);
-        $password = addslashes($_POST['password']);
-
-        // Validate data
-        $errors = [];
-
-        if (empty($email)) {
-            $errors['email'] = "Email is required";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = "Invalid email address";
-        }
-    
-        if (empty($password)) {
-            $errors['password'] = "Password is required";
-        }
-    
-        if (empty($email) && empty($password)) {
-            $errors['empty_inputs'] = "Please fill in all the fields";
-        }    
-
-        if(empty($errors))
-        {
-            $row = query("SELECT * FROM users WHERE email = '$email' LIMIT 1");
-    
-            if(!empty($row))
-            {
-                $row = $row[0];
-                if(password_verify($password, $row['password']))
-                {
-                    $info['success'] = true;
-                    $_SESSION['RAIN_USER'] = $row;
-                } else {
-                    $errors['login_failed'] = "Invalid email or password";
-                }
-            } else {
-                $errors['login_failed'] = "Invalid email or password";
+                
+                $info['rows'] = $rows;
+                $info['success'] = true;
             }
         }
-        $info['errors'] = $errors;
     }
 } 
 
