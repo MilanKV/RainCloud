@@ -9,6 +9,7 @@ $info = [
     'success' => false,
     'LOGGED_IN' => is_logged_in(),
     'name' => $_SESSION['RAIN_USER']['name'] ?? 'User',
+    'email' => $_SESSION['RAIN_USER']['email'] ?? 'Email',
     'data_type' => $_POST['data_type'] ?? '',
 ];
 
