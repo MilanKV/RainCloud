@@ -1,5 +1,6 @@
 var LOGGED_IN = false;
 var USERNAME = false;
+
 /**
  *  Sorts a HTML table.
  * 
@@ -172,7 +173,10 @@ const table = {
                         USERNAME = obj.name;
                         document.querySelector(".user_name").innerHTML = obj.name;
                     }
-
+                    // Display Email
+                    if(obj.email) {
+                        document.querySelector(".user_email").innerHTML = obj.email;
+                    }
                     // Check if user is logged-in
                     LOGGED_IN = obj.LOGGED_IN;
                     if(!LOGGED_IN) {
@@ -363,19 +367,31 @@ var file_details = {
     },
 };
 
+// Create btn
 const createButton = document.getElementById("createButton");
-const createMenu = document.getElementById("createMenu");  
+const createMenu = document.getElementById("createMenu");
+// Profile btn  
+const profileButton = document.getElementById("util-btn");
+const profileMenu = document.getElementById("prof-Menu");
 
-createButton.addEventListener("click", function() {
-    createMenu.classList.toggle("hidden");
-});
+createButton.addEventListener("click", toggleMenu.bind(null, createMenu));
+profileButton.addEventListener("click", toggleMenu.bind(null, profileMenu));
+window.addEventListener("click", handleWindowCLick);
+
+function toggleMenu(menu) {
+    menu.classList.toggle("hidden");
+}
+
+function handleWindowCLick(event) {
+    hideMenu(createMenu, createButton, event);
+    hideMenu(profileMenu, profileButton, event);
+    menuContent.hide();
+}
+
+function hideMenu(menu, button, event) {
+    if(!button.contains(event.target) && !menu.contains(event.target)) {
+        menu.classList.add("hidden")
+    }
+}
 
 table.refresh();
-
-window.addEventListener("click", function() 
-{
-    menuContent.hide();
-    if (!createButton.contains(event.target) && !createMenu.contains(event.target)) {
-        createMenu.classList.add("hidden");
-    }
-});
