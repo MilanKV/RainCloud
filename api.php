@@ -13,6 +13,8 @@ $info = [
     'data_type' => $_POST['data_type'] ?? '',
 ];
 
+$logged_in = $info['LOGGED_IN'];
+
 $without_login = ['user_signup', 'user_login'];
 if(!$info['LOGGED_IN'] && (!in_array($info['data_type'], $without_login)))
 {
@@ -33,48 +35,62 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
             file_put_contents($folder. ".HTACCESS", "Options -Indexes");
         }
 
-        foreach ($_FILES as $key => $file) {
+        // Check if user is logged in and fetch the user ID
+        if(isset($_SESSION['RAIN_USER']['email'])) {
+            $logged_in = $_SESSION['RAIN_USER']['email'];
+            
+            // Fetch the user ID, based on the logged-in user's name
+            $user_id = fetchUserId($logged_in);
 
-            $destination = $folder. time() . $file['name'];
-            if(file_exists($destination))
-                $destination = $folder. time() . rand(0,9999) . $file['name'];
+            if($user_id !== null) {
 
-            move_uploaded_file($file['tmp_name'], $destination);
-
-            // Save to database
-            $file_name = $file['name'];
-            $file_size = filesize($destination);
-            $file_type = $file['type'];
-            $file_path = $destination;
-            $user_id = 0;
-            $date_created = date("Y-m-d H:i:s");
-            $date_updated = date("Y-m-d H:i:s");
-
-            $query = "INSERT INTO drive 
-            (file_name, file_size, file_type, file_path, user_id, date_created, date_updated) 
-            VALUES ('$file_name', '$file_size', '$file_type', '$file_path', '$user_id', '$date_created', '$date_updated')";
-
-            query($query);
-
-            $info['success'] = true;
+                foreach ($_FILES as $key => $file) {
+        
+                    $destination = $folder. time() . $file['name'];
+                    if(file_exists($destination))
+                        $destination = $folder. time() . rand(0,9999) . $file['name'];
+        
+                    move_uploaded_file($file['tmp_name'], $destination);
+        
+                    // Save to database
+                    $file_name = $file['name'];
+                    $file_size = filesize($destination);
+                    $file_type = $file['type'];
+                    $file_path = $destination;
+                    $date_created = date("Y-m-d H:i:s");
+                    $date_updated = date("Y-m-d H:i:s");
+        
+                    $query = "INSERT INTO drive 
+                    (file_name, file_size, file_type, file_path, user_id, date_created, date_updated) 
+                    VALUES ('$file_name', '$file_size', '$file_type', '$file_path', '$user_id', '$date_created', '$date_updated')";
+        
+                    query($query);
+        
+                    $info['success'] = true;
+                }
+            } else {
+                $info['success'] = false;
+                $info['message'] = "User not found";
+            }
         }
     } else 
     if($_POST['data_type'] == "get_files") 
     {
-        $query = "SELECT * FROM drive ORDER BY id DESC LIMIT 25";
+        $user_id = $_SESSION['RAIN_USER']['id'] ?? null;
+        
+        $query = "SELECT * FROM drive WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 25";
         $rows = query($query);
         if($rows)
         {
-            foreach ($rows as $key => $row) 
+            foreach ($rows as &$row) 
             {
-                $rows[$key]['icon'] = get_icon($row['file_type']);
-                $rows[$key]['file_size'] = round($row['file_size'] / (1024 * 1024)) . "MB";
-                if($rows[$key]['file_size'] == "0MB") 
-                {
-                    $rows[$key]['file_size'] = round($row['file_size'] / (1024)) . "kB";
-                }
-                $rows[$key]['date_updated'] = get_date($row['date_updated']);
-                $rows[$key]['date_created'] = get_date($row['date_created']);
+                $part = explode(".", $row['file_name']);
+                $ext = strtoLower(end($part));
+                $row['icon'] = get_icon($row['file_type'], $ext);
+                $file_size = round($row['file_size'] / (1024 * 1024), 2);
+                $row['file_size'] = ($file_size >= 1) ? number_format($file_size, 2) . "MB" : number_format($row['file_size'] / 1024, 2) . "KB";
+                $row['date_updated'] = get_date($row['date_updated']);
+                $row['date_created'] = get_date($row['date_created']);
             }
             
             $info['rows'] = $rows;
@@ -176,6 +192,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
             }
         }
         $info['errors'] = $errors;
+    } else
+    if($_POST['data_type'] == "user_signout")  
+    {
+        if(isset($_SESSION['RAIN_USER']))
+            unset($_SESSION['RAIN_USER']);
+        
+        $info['success'] = true;
     }
 } 
 

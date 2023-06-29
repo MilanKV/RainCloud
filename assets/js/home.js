@@ -160,6 +160,8 @@ const table = {
             {
                 if(xm.status == 200)
                 {
+
+                    // console.log(xm.responseText);
                     // Recreate table
                     let tbody = document.querySelector(".table-body");
                     tbody.innerHTML = "";
@@ -223,6 +225,32 @@ const table = {
         // Open a POST request api.php and send the FormData
         xm.open('post', '../api.php', true);
         xm.send(myform);
+    },
+
+    logout: function() 
+    {
+        let myform = new FormData();
+        myform.append('data_type', 'user_signout');
+
+        let xm = new XMLHttpRequest();
+			xm.addEventListener('readystatechange',function()
+            {
+				if(xm.readyState == 4)
+				{
+					if(xm.status == 200)
+					{
+						//console.log(xm.responseText);
+ 						window.location.href = '../view/auth/login.php';
+ 
+					}else{
+						console.log(xm.responseText);
+					}
+
+				}
+			});
+
+			xm.open('post', '../api.php', true);
+			xm.send(myform);
     },
 };
 
@@ -370,12 +398,8 @@ var file_details = {
 // Create btn
 const createButton = document.getElementById("createButton");
 const createMenu = document.getElementById("createMenu");
-// Profile btn  
-const profileButton = document.getElementById("util-btn");
-const profileMenu = document.getElementById("prof-Menu");
 
 createButton.addEventListener("click", toggleMenu.bind(null, createMenu));
-profileButton.addEventListener("click", toggleMenu.bind(null, profileMenu));
 window.addEventListener("click", handleWindowCLick);
 
 function toggleMenu(menu) {
@@ -384,7 +408,6 @@ function toggleMenu(menu) {
 
 function handleWindowCLick(event) {
     hideMenu(createMenu, createButton, event);
-    hideMenu(profileMenu, profileButton, event);
     menuContent.hide();
 }
 

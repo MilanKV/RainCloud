@@ -77,7 +77,7 @@
                                         <span class="menu-item-title">Settings</span>
                                     </div>
                                 </a>
-                                <a class="link-menu-drop" href="#">
+                                <a onclick="table.logout()" class="link-menu-drop" href="#">
                                     <div class="menu-item-content">
                                         <span class="menu-item-title">Sign out</span>
                                     </div>
@@ -123,14 +123,12 @@
         </div>
         <div class="main">
             <?php
-            ob_start(); // Start output buffering
             // Default home if no page parameter is provided
             $page = $_GET['page'] ?? 'home';
 
             if(!isset($_GET['page']) && empty($_SERVER['QUERY_STRING']))
             {
                 header("Location: layout.php?page={$page}");
-                ob_end_flush(); // End output buffering and send headers
             }
             // Define an array of allowed pages
             $allowedPages = ['home', 'favorites', 'shared', 'deleted'];
@@ -209,6 +207,6 @@
             </div>
         </div>
     </div>
-    <script src="../assets/js/home.js"></script>
+    <script src="../assets/js/layout.js"></script>
 </body>
 </html>
