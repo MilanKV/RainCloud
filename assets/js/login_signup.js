@@ -152,7 +152,7 @@ const login = {
                     if(obj.success && obj.data_type == "user_login")
                     {
                         alert("Login successfuly");
-                        window.location = '../../view/layout.php';
+                        window.location = '../../view/layout.php?page=home';
 
                     } else {
                         
