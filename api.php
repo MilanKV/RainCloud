@@ -11,6 +11,8 @@ $info = [
     'name' => $_SESSION['RAIN_USER']['name'] ?? 'User',
     'email' => $_SESSION['RAIN_USER']['email'] ?? 'Email',
     'data_type' => $_POST['data_type'] ?? '',
+    'space_occupied' => get_occupied_space($_SESSION['RAIN_USER']['id'] ?? 0),
+    'space_total' => 2, // Total GBs
 ];
 
 $logged_in = $info['LOGGED_IN'];
@@ -51,22 +53,32 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
                         $destination = $folder. time() . rand(0,9999) . $file['name'];
         
                     move_uploaded_file($file['tmp_name'], $destination);
-        
-                    // Save to database
-                    $file_name = $file['name'];
-                    $file_size = filesize($destination);
-                    $file_type = $file['type'];
-                    $file_path = $destination;
-                    $date_created = date("Y-m-d H:i:s");
-                    $date_updated = date("Y-m-d H:i:s");
-        
-                    $query = "INSERT INTO drive 
-                    (file_name, file_size, file_type, file_path, user_id, date_created, date_updated) 
-                    VALUES ('$file_name', '$file_size', '$file_type', '$file_path', '$user_id', '$date_created', '$date_updated')";
-        
-                    query($query);
-        
-                    $info['success'] = true;
+                    
+                    // Check if there is enough space to save
+                    $occupied = $info['space_occupied'];
+                    $space_total = $info['space_total'] * (1024 * 1024 * 1024); // GB
+
+                    if($occupied + $file['size'] <= $space_total) {
+                        
+                        // Save to database
+                        $file_name = $file['name'];
+                        $file_size = filesize($destination);
+                        $file_type = $file['type'];
+                        $file_path = $destination;
+                        $date_created = date("Y-m-d H:i:s");
+                        $date_updated = date("Y-m-d H:i:s");
+            
+                        $query = "INSERT INTO drive 
+                        (file_name, file_size, file_type, file_path, user_id, date_created, date_updated) 
+                        VALUES ('$file_name', '$file_size', '$file_type', '$file_path', '$user_id', '$date_created', '$date_updated')";
+            
+                        query($query);
+            
+                        $info['success'] = true;
+                    } else {
+                        $info['success'] = false;
+                        $info['message'] = "You don't have enough space";
+                    }
                 }
             } else {
                 $info['success'] = false;
@@ -78,7 +90,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
     {
         $user_id = $_SESSION['RAIN_USER']['id'] ?? null;
         
-        $query = "SELECT * FROM drive WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 25";
+        $query = "SELECT * FROM drive WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 10";
         $rows = query($query);
         if($rows)
         {

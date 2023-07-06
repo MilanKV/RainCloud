@@ -452,31 +452,86 @@ body {
 
 .cloud-space {
     position: relative;
-    padding: 24px 0 32px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 0 32px 0;
     border-top: 1px solid var(--border-faint);
 }
 
-.cloud-space .link_name {
-    position: relative;
-    display: block;
-    text-align: start;
-    margin-bottom: 8px;
+.cloud-space .space-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-left: 32px;
+    margin-right: 32px;
+    width: 176px;
+}
+
+.cloud-space .space-content .link_name {
+    
     font-size: 16px;
     font-weight: 600;
-    text-decoration: none;
-    color: var(--black1);
+    line-height: 22px;
+    color: var(--text);
 }
 
-.cloud-space .progress-space {
-    width: 80%;
+.cloud-space .space-content .storage-progress {
     height: 6px;
-    margin-bottom: 8px;
-    background-color: var(--btn-primary);
-	color: rgb(255, 255, 255);
+    width: 100%;
+    background: #d8d3cb;
 }
 
-.cloud-space .space a i {
-    color: var(--btn-primary);
+.cloud-space .space-content .storage-progress .progress-space {
+    width: 0%;
+    height: 100%;
+    background: var(--btn-primary);
+}
+
+.cloud-space .space-content .storage-space {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.cloud-space .space-content .storage-space .storage {
+    line-height: 16px;
+    color: var(--text);
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.cloud-space .space-content .storage-space a {
+    position: relative;
+    height: 32px;
+    line-height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    vertical-align: middle;
+}
+
+.cloud-space .space-content .storage-space a i {
+    position: relative;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 32px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    color: var(--text);
+}
+
+.cloud-space .space-content .storage-space a:hover {
+    background-color: var(--lightb);
 }
 
 /* main */

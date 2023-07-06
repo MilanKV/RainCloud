@@ -112,12 +112,17 @@
                 </li>      
             </ul>
             <div class="cloud-space">
-                <span class="link_name">Cloud Space</span>
-                <div class="progress-space"></div>
-                <div class="space">2GB of 15GB used
-                    <a href="">
-                        <i class='bx bx-plus-circle'></i>
-                    </a>
+                <div class="space-content">
+                    <span class="link_name">Cloud Space</span>
+                    <div class="storage-progress">
+                        <div class="progress-space space_percent"></div>
+                    </div>
+                    <div class="storage-space">
+                        <span class="storage rain_space">2GB of 15GB used</span>
+                        <a href="#">
+                            <i class='bx bx-plus-circle'></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

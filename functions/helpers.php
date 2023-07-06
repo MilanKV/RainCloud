@@ -13,3 +13,13 @@ function is_logged_in() {
     }
     return false;
 }
+
+function get_occupied_space($user_id) 
+{
+    $query = "SELECT sum(file_size) AS sum FROM drive WHERE user_id = '$user_id'";
+    $row = query($query);
+    if($row) {
+        return $row[0]['sum'];
+    }
+    return 0;
+}
