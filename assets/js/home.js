@@ -1,5 +1,7 @@
 var LOGGED_IN = false;
 var USERNAME = false;
+var SPACE_TOTAL = 0;
+var SPACE_OCCUPIED = 0;
 
 /**
  *  Sorts a HTML table.
@@ -186,6 +188,8 @@ const table = {
                         window.location.href = 'auth/login.php';
                     }
                     
+                    window.updateSpaceInfo(obj);
+
                     if(obj.success && obj.data_type == "get_files")
                     {
 
@@ -281,10 +285,18 @@ const upload = {
         let myform = new FormData();
 
         myform.append('data_type', 'upload_files');
+
+        let file_size = 0;
         for(var i = 0; i < files.length; i++) 
         {
-            
+            file_size += files[i].size;
             myform.append('file'+i, files[i]);
+        }
+
+        if(parseInt(SPACE_OCCUPIED) + parseInt(file_size) > (SPACE_TOTAL * (1024 * 1024 * 1024)))
+        {
+            alert("There is not enough space");
+            return;
         }
 
         let xm = new XMLHttpRequest();
