@@ -407,9 +407,10 @@ var file_details = {
     },
 };
 
-// Create btn
+// Create buttons
 const createButton = document.getElementById("createButton");
 const createMenu = document.getElementById("createMenu");
+const overlay = document.getElementById('overlay');
 
 createButton.addEventListener("click", toggleMenu.bind(null, createMenu));
 window.addEventListener("click", handleWindowCLick);
@@ -419,14 +420,30 @@ function toggleMenu(menu) {
 }
 
 function handleWindowCLick(event) {
-    hideMenu(createMenu, createButton, event);
-    menuContent.hide();
+    if(![createButton, createMenu, overlay].some(element => element.contains(event.target))) {
+
+        createMenu.classList.add("hidden");
+        menuContent.hide();
+        hideCreateModal();  
+    }
+}
+// Modal Buttons
+
+// Check input if empty disable create folder button
+function checkInput() {
+    var inputField = document.getElementById('new_folder');
+    var createButtonSubmit = document.getElementById('btn-create');
+    createButtonSubmit.disabled = inputField.value.trim() === '';
 }
 
-function hideMenu(menu, button, event) {
-    if(!button.contains(event.target) && !menu.contains(event.target)) {
-        menu.classList.add("hidden")
-    }
+// Show Create New folder Modal
+function showCreateModal() {
+    createMenu.classList.add('hidden');
+    overlay.classList.remove('hidden');
+}
+
+function hideCreateModal() {
+    overlay.classList.add('hidden');
 }
 
 table.refresh();
