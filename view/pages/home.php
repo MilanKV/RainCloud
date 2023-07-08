@@ -29,7 +29,7 @@
                 <ul class="sub-menu hidden" id="createMenu">
                     <div class="menu-item">
                         <li>
-                            <a href="#" onclick="showCreateModal()">
+                            <a href="#" onclick="createModal.showCreateModal()">
                                 <div class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);">
                                         <path d="M20 5h-8.586L9.707 3.293A.997.997 0 0 0 9 3H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2zM4 19V7h16l.002 12H4z">
@@ -211,14 +211,14 @@
             </div>
             <div class="body-create">
                 <div class="folder-name-input">
-                    <label class="folder_name" for="new_folder_input">Name</label>
+                    <label class="folder_name">Name</label>
                     <span class="name_input">
-                        <input id="new_folder" class="folder_input" oninput="checkInput()" type="text" placeholder="Folder Name">
+                        <input id="new_folder" class="folder_input" oninput="createModal.checkInput()" type="text" placeholder="Folder Name">
                     </span>
                 </div>
             </div>
             <div class="footer-create">
-                <button id="btn-cancel" class="btn-standard" onclick="hideCreateModal()">
+                <button id="btn-cancel" class="btn-standard" onclick="createModal.hideCreateModal()">
                     <span class="button-content">Cancel</span>
                 </button>
                 <button id="btn-create" class="btn-standard" disabled>
@@ -226,7 +226,7 @@
                 </button>
             </div>
         </div>
-        <button class="icon-cancel" onclick="hideCreateModal()">
+        <button class="icon-cancel" onclick="createModal.hideCreateModal()">
             <span class="cancel">
                 <i class="fa-regular fa-x fa-sm"></i>
             </span>

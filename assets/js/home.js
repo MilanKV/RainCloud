@@ -408,11 +408,104 @@ var file_details = {
 };
 
 // Create buttons
+
+// Elements
 const createButton = document.getElementById("createButton");
 const createMenu = document.getElementById("createMenu");
 const overlay = document.getElementById('overlay');
+const createInput = document.querySelector('#overlay input');
+const createButtonSubmit = document.getElementById('btn-create');
 
+// Create Modal
+const createModal = {
+
+    uploading: false,
+
+    // Show Create New folder Modal
+    showCreateModal: function() {
+        createMenu.classList.add('hidden');
+        overlay.classList.remove('hidden');
+        createInput.value = "";
+        createInput.focus();
+    },
+    // Hide Create New folder Modal
+    hideCreateModal: function() {
+        overlay.classList.add('hidden');
+    },
+    // Check input if empty disable create folder button
+    checkInput: function() {
+        createButtonSubmit.disabled = createInput.value.trim() === '';
+    },
+    
+    new_folder: function() {
+        let text = createInput.value.trim();
+        overlay.classList.add('hidden');
+
+        let obj = {};
+        obj.data_type = 'new_folder';
+        obj.name = text;
+
+        createModal.send(obj);
+    },
+
+    send: function(obj) {
+        if(createModal.uploading) 
+        {
+            alert("Please wait for the upload to complete!");
+            return;
+        }
+
+        createModal.uploading = true;
+
+        let myform = new FormData();
+
+        for(key in obj) 
+        {
+            myform.append(key, obj[key]);
+        }
+
+        let xm = new XMLHttpRequest();
+        
+        xm.addEventListener('error', function(e) 
+        {
+            alert("An error occured! Please check your connection");
+        });
+
+        // Handle changes in the request state
+        xm.addEventListener('readystatechange', function() 
+        {
+            if(xm.readyState == 4)
+            {
+                if(xm.status == 200)
+                {
+                    let obj = JSON.parse(xm.responseText);
+                    if(obj.success)
+                    {
+                        table.refresh();
+                    } else {
+                        alert("Could not complete operation!");
+                    }
+                } else {
+                    console.log(xm.responseText);
+                    alert("An error occured! Please try again later");
+                }
+
+                createModal.uploading = false;
+            }    
+        });
+
+        // Open a POST request api.php and send the FormData
+        xm.open('post', '../api.php', true);
+        xm.send(myform);
+
+        table.refresh();
+    },
+}
+
+// Event Listeners
 createButton.addEventListener("click", toggleMenu.bind(null, createMenu));
+createInput.addEventListener("input", createModal.checkInput);
+createButtonSubmit.addEventListener("click", createModal.new_folder);
 window.addEventListener("click", handleWindowCLick);
 
 function toggleMenu(menu) {
@@ -421,29 +514,10 @@ function toggleMenu(menu) {
 
 function handleWindowCLick(event) {
     if(![createButton, createMenu, overlay].some(element => element.contains(event.target))) {
-
         createMenu.classList.add("hidden");
         menuContent.hide();
-        hideCreateModal();  
+        createModal.hideCreateModal();  
     }
-}
-// Modal Buttons
-
-// Check input if empty disable create folder button
-function checkInput() {
-    var inputField = document.getElementById('new_folder');
-    var createButtonSubmit = document.getElementById('btn-create');
-    createButtonSubmit.disabled = inputField.value.trim() === '';
-}
-
-// Show Create New folder Modal
-function showCreateModal() {
-    createMenu.classList.add('hidden');
-    overlay.classList.remove('hidden');
-}
-
-function hideCreateModal() {
-    overlay.classList.add('hidden');
 }
 
 table.refresh();

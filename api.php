@@ -90,12 +90,29 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
     {
         $user_id = $_SESSION['RAIN_USER']['id'] ?? null;
         
+        $query_folder = "SELECT * FROM folders WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 10";
         $query = "SELECT * FROM drive WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 10";
+        
+        $rows_folder = query($query_folder);
         $rows = query($query);
-        if($rows)
+
+        if (!empty($rows_folder)) {
+            $rows = array_merge($rows_folder, $rows);
+        }
+
+        if(!empty($rows))
         {
             foreach ($rows as &$row) 
             {
+                if(empty($row['file_type'])) {
+                    
+                    $row['file_type'] = 'folder';
+                    $row['file_size'] = 0;
+                    $row['file_name'] = $row['name'];
+                    $row['date_created'] = $row['date_created'];
+                    $row['date_updated'] = $row['date_updated'];
+                }
+
                 $part = explode(".", $row['file_name']);
                 $ext = strtoLower(end($part));
                 $row['icon'] = get_icon($row['file_type'], $ext);
@@ -211,6 +228,31 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
             unset($_SESSION['RAIN_USER']);
         
         $info['success'] = true;
+    } else
+    if($_POST['data_type'] == "new_folder")
+    {
+        $logged_in = $_SESSION['RAIN_USER']['email'];
+            
+        // Fetch the user ID, based on the logged-in user's name
+        $user_id = fetchUserId($logged_in);
+
+        if($user_id !== null) {
+            
+            // Save to database
+            $name = addslashes($_POST['name']);
+            $date_created = date("Y-m-d H:i:s");
+
+            $query = "INSERT INTO folders 
+            (name, user_id, date_created) VALUES ('$name', '$user_id', '$date_created')";
+
+            query($query);
+
+            $info['success'] = true;
+
+        } else {
+            $info['success'] = false;
+            $info['message'] = "User not found";
+        }
     }
 } 
 
