@@ -13,6 +13,7 @@ $info = [
     'data_type' => $_POST['data_type'] ?? '',
     'space_occupied' => get_occupied_space($_SESSION['RAIN_USER']['id'] ?? 0),
     'space_total' => 2, // Total GBs
+    'breadcrumbs' => [],
 ];
 
 $logged_in = $info['LOGGED_IN'];
@@ -65,12 +66,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
                         $file_size = filesize($destination);
                         $file_type = $file['type'];
                         $file_path = $destination;
+                        $folder_id = $_POST['folder_id'] ?? 0;
                         $date_created = date("Y-m-d H:i:s");
                         $date_updated = date("Y-m-d H:i:s");
             
                         $query = "INSERT INTO drive 
-                        (file_name, file_size, file_type, file_path, user_id, date_created, date_updated) 
-                        VALUES ('$file_name', '$file_size', '$file_type', '$file_path', '$user_id', '$date_created', '$date_updated')";
+                        (file_name, file_size, file_type, file_path, user_id, folder_id, date_created, date_updated) 
+                        VALUES ('$file_name', '$file_size', '$file_type', '$file_path', '$user_id', '$folder_id', '$date_created', '$date_updated')";
             
                         query($query);
             
@@ -89,15 +91,38 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
     if($_POST['data_type'] == "get_files") 
     {
         $user_id = $_SESSION['RAIN_USER']['id'] ?? null;
-        
-        $query_folder = "SELECT * FROM folders WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 10";
-        $query = "SELECT * FROM drive WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 10";
+        $folder_id = $_POST['folder_id'] ?? 0;
+
+        // Breadcrumbs
+        $has_parent = true;
+        $num = 0;
+        $myfolder_id = $folder_id;
+        while($has_parent && $num < 100){
+            
+            $query = "SELECT * FROM folders WHERE id = '$myfolder_id' LIMIT 1";
+            $row = query($query);
+            if($row) {
+
+                $info['breadcrumbs'][] = $row[0];
+                if($row[0]['parent'] == 0) {
+                    $has_parent = false;
+                } else {
+                    $myfolder_id = $row[0]['parent'];
+                }
+            }
+            $num++;
+        }
+
+        $query_folder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' ORDER BY id DESC LIMIT 10";
+        $query = "SELECT * FROM drive WHERE user_id = '$user_id' && folder_id = '$folder_id' ORDER BY id DESC LIMIT 10";
         
         $rows_folder = query($query_folder);
         $rows = query($query);
-
-        if (!empty($rows_folder)) {
-            $rows = array_merge($rows_folder, $rows);
+        if(!is_bool($rows) && !empty($rows_folder)) {
+            
+            $rows = array_merge($rows_folder, (array)$rows);
+        } elseif (is_bool($rows)) {
+            $rows = $rows_folder;
         }
 
         if(!empty($rows))
@@ -241,9 +266,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
             // Save to database
             $name = addslashes($_POST['name']);
             $date_created = date("Y-m-d H:i:s");
+            $date_updated = date("Y-m-d H:i:s");
+            $parent = $_POST['folder_id'] ?? 0;
 
             $query = "INSERT INTO folders 
-            (name, user_id, date_created) VALUES ('$name', '$user_id', '$date_created')";
+            (name, user_id, parent, date_created, date_updated) VALUES ('$name', '$user_id', '$parent', '$date_created', '$date_updated')";
 
             query($query);
 

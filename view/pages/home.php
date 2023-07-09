@@ -1,18 +1,18 @@
 <!-- breadcrumb -->
-<div class="breadcrumb">
+<div id="breadcrumbs" class="breadcrumb">
     <ul>
         <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">Home</a>
+            <a href="#" onclick="table.navigateFolder_id(0)" class="breadcrumb_link">Home</a>
+        </li>
+        <!-- <li class="breadcrumb_item">
+            <a href="#" class="breadcrumb_link">folder1</a>
         </li>
         <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">file1</a>
+            <a href="#" class="breadcrumb_link">folder2</a>
         </li>
         <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">file2</a>
-        </li>
-        <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">file3</a>
-        </li>
+            <a href="#" class="breadcrumb_link">folder3</a>
+        </li> -->
     </ul>
 </div>
 <!-- Home  -->
@@ -98,7 +98,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody id="table-body" class="table-body" oncontextmenu="menuContent.show(event)" onclick="table.select(event)" ondrop="upload.drop(event)" ondragover="upload.dragOver(event)" ondragleave="upload.dropZone.removeHighlight()">
+                <tbody id="table-body" class="table-body" oncontextmenu="menuContent.show(event)" onclick="table.select(event)" ondblclick="table.navigateFolder(event)" ondrop="upload.drop(event)" ondragover="upload.dragOver(event)" ondragleave="upload.dropZone.removeHighlight()">
                     <!-- <tr>
                         <td><input type="checkbox" class="select"></td>
                         <td></td>
