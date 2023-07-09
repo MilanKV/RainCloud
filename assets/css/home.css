@@ -9,11 +9,17 @@
     --darkl: #4C566A;
     --white: #fff;
 
+    /* light */
+    --lightb: #D8DEE9;
+    --lightm: #E5E9F0;
+    --lightl: #ECEFF4;
+
     --box-shadow: 0px 8px 32px #1e191908,0px 8px 16px #1e191908,0px 4px 8px #1e191908,0px 2px 4px #1e191908,0px 1px 2px #1e191908;
     --border2: #dfdcd8;
     --border-faint: #a6917133; 
     --dot-border: #a69e9299;
     --border-subtle: #dfdcd8;
+    --border-bold: #8c8279;
 
     --text-lt: #736c64;
     --text-base: #1a1918;
@@ -370,4 +376,182 @@
     overflow: auto;
     font-size: 16px;
     font-weight: 500;
+}
+
+/* Folder */
+
+.after-open {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .502);
+    z-index: 100;
+    overflow: hidden;
+    opacity: 1;
+}
+
+.after-open .folder {
+    position: absolute;
+    left: 30%;
+    margin: calc(8px + 10vh) 0;
+    max-height: 100%;
+    min-height: 180px;
+    max-width: 100%;
+    min-width: 600px;
+    outline: none;
+}
+
+.after-open .folder .folder-content {
+    background-color: var(--lightl);
+    box-shadow: var(--box-shadow);
+    outline: none;
+    width: 100%;
+}
+
+.after-open .folder .folder-content .header-create {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-faint);
+}
+
+.after-open .folder .folder-content .header-create h2 {
+    margin: 0 12px;
+    color: var(--text-base);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+}
+
+.after-open .folder .folder-content .body-create {
+    padding-top: 16px;
+    padding-right: calc(8px * 3);
+    padding-bottom: 16px;
+    padding-left: calc(8px * 3);
+    color: var(--text-base);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+}
+
+.after-open .folder .folder-content .body-create .folder-name-input {
+    margin-bottom: 15px;
+}
+
+.after-open .folder .folder-content .body-create .folder-name-input .folder_name {
+    display: flex;
+    align-items: center;
+    height: 20px;
+    color: var(--text-base);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    margin-bottom: calc(8px / 2);
+    cursor: default;
+}
+
+.after-open .folder .folder-content .body-create .folder-name-input .name_input {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-start;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+    color: var(--text-base);
+    border: 1px solid var(--border-bold);
+}
+
+.after-open .folder .folder-content .body-create .folder-name-input .name_input:hover {
+    border-color: #1a1918;
+}
+
+.after-open .folder .folder-content .body-create .folder-name-input .name_input .folder_input {
+    width: 100%;
+    height: 22px;
+    border: none;
+    outline: none;
+    margin-left: 0;
+    padding: 4px 8px;
+    background-color: var(--lightl);
+}
+
+.after-open .folder .folder-content .footer-create {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: calc(8px * 3);
+}
+
+.after-open .folder .folder-content .footer-create .btn-standard {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    margin-left: 14px;
+    padding: 0 12px;
+    width: 70px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    color: var(--text-base);
+    background-color: var(--lightb);
+    border: 1px solid var(--border-bold);
+}
+
+.after-open .folder .folder-content .footer-create #btn-create[disabled] {
+    background-color: gray;
+    color: var(--white);
+    cursor: default;
+}
+
+.after-open .folder .folder-content .footer-create .btn-standard:nth-child(2) {
+    background-color: var(--btn-primary);
+    color: #eee;
+}
+
+.after-open .folder .folder-content .footer-create .btn-standard:hover {
+    border-color: #1a1918;
+    background-color: var(--lightm);
+}
+
+.after-open .folder .folder-content .footer-create .btn-standard:nth-child(2):hover {
+    background-color: var(--btn-primary-lt);
+}
+
+.after-open .folder .folder-content .footer-create .btn-standard .button-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.after-open .folder .icon-cancel {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    height: 32px;
+    width: 32px;
+    line-height: 32px;
+    border: none;
+    border-radius: 0;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    vertical-align: middle;
+    background: #0000;
+}
+
+.after-open .folder .icon-cancel:hover {
+    background-color: var(--lightb);
 }

@@ -2,6 +2,7 @@ var LOGGED_IN = false;
 var USERNAME = false;
 var SPACE_TOTAL = 0;
 var SPACE_OCCUPIED = 0;
+var FOLDER_ID = 0;
 
 /**
  *  Sorts a HTML table.
@@ -150,10 +151,34 @@ const table = {
         }
     },
 
+    navigateFolder_id: function(folder_id) {
+        FOLDER_ID = parseInt(folder_id);
+        table.refresh();
+    },
+
+    navigateFolder: function(e) {
+
+        let item = e.target;
+
+        while(item.tagName != 'TR' && item.tagName != 'BODY') {
+            item = item.parentNode;
+        }
+        
+        if(item.tagName == 'TR') {
+            let folder_id = item.getAttribute("folder_id");
+            
+            if(folder_id) {
+                FOLDER_ID = parseInt(folder_id);
+                table.refresh();
+            }
+        }
+    },
+
     refresh: function() 
     {
         let myform = new FormData();
         myform.append('data_type', 'get_files');
+        myform.append('folder_id', FOLDER_ID);
 
         let xm = new XMLHttpRequest();
         xm.addEventListener('readystatechange', function() 
@@ -163,7 +188,7 @@ const table = {
                 if(xm.status == 200)
                 {
 
-                    // console.log(xm.responseText);
+                    console.log(JSON.stringify(JSON.parse(xm.responseText), null, 2));
                     // Recreate table
                     let tbody = document.querySelector(".table-body");
                     tbody.innerHTML = "";
@@ -187,7 +212,37 @@ const table = {
 
                         window.location.href = 'auth/login.php';
                     }
-                    
+
+                    // Update breadcrumbs
+                    const bcrumbs = document.querySelector('#breadcrumbs ul');
+                    bcrumbs.innerHTML = ''; // Clear existing breadcrumb items
+
+                    // Create the Home breadcrumb item
+                    const homeItem = createBreadcrumbItem('Home', 0);
+                    bcrumbs.appendChild(homeItem);
+
+                    // Add the remaining breadcrumb items from the 'obj.breadcrumbs' array in reverse order
+                    for (let i = obj.breadcrumbs.length - 1; i >= 0; i--) {
+                    const breadcrumbItem = createBreadcrumbItem(obj.breadcrumbs[i].name, obj.breadcrumbs[i].id);
+                    bcrumbs.appendChild(breadcrumbItem);
+                    }
+
+                    // Function to create a breadcrumb item
+                    function createBreadcrumbItem(name, id) {
+                    const breadcrumbItem = document.createElement('li');
+                    breadcrumbItem.classList.add('breadcrumb_item');
+                    const breadcrumbLink = document.createElement('a');
+                    breadcrumbLink.href = '#';
+                    breadcrumbLink.onclick = function() {
+                        table.navigateFolder_id(id);
+                    };
+                    breadcrumbLink.classList.add('breadcrumb_link');
+                    breadcrumbLink.textContent = name;
+                    breadcrumbItem.appendChild(breadcrumbLink);
+                    return breadcrumbItem;
+                    }
+
+                    // Update Space
                     window.updateSpaceInfo(obj);
 
                     if(obj.success && obj.data_type == "get_files")
@@ -200,6 +255,15 @@ const table = {
                         {
                             let tr = document.createElement('tr');
                             tr.setAttribute('id','tr_'+i);
+                            
+                            if(obj.rows[i].file_type == 'folder') {
+                                tr.setAttribute('type','folder');
+                            } else {
+                                tr.setAttribute('type','file');
+                            }
+
+                            if(obj.rows[i].file_type == 'folder')
+                            tr.setAttribute('folder_id',+ obj.rows[i].id);
 
                             tr.innerHTML = `
                                 <td><input type="checkbox" class="select" onchange="table.select(event)"></td>
@@ -285,6 +349,7 @@ const upload = {
         let myform = new FormData();
 
         myform.append('data_type', 'upload_files');
+        myform.append('folder_id', FOLDER_ID);
 
         let file_size = 0;
         for(var i = 0; i < files.length; i++) 
@@ -407,11 +472,106 @@ var file_details = {
     },
 };
 
-// Create btn
+// Create buttons
+
+// Elements
 const createButton = document.getElementById("createButton");
 const createMenu = document.getElementById("createMenu");
+const overlay = document.getElementById('overlay');
+const createInput = document.querySelector('#overlay input');
+const createButtonSubmit = document.getElementById('btn-create');
 
+// Create Modal
+const createModal = {
+
+    uploading: false,
+
+    // Show Create New folder Modal
+    showCreateModal: function() {
+        createMenu.classList.add('hidden');
+        overlay.classList.remove('hidden');
+        createInput.value = "";
+        createInput.focus();
+    },
+    // Hide Create New folder Modal
+    hideCreateModal: function() {
+        overlay.classList.add('hidden');
+    },
+    // Check input if empty disable create folder button
+    checkInput: function() {
+        createButtonSubmit.disabled = createInput.value.trim() === '';
+    },
+    
+    new_folder: function() {
+        let text = createInput.value.trim();
+        overlay.classList.add('hidden');
+
+        let obj = {};
+        obj.data_type = 'new_folder';
+        obj.name = text;
+        obj.folder_id = FOLDER_ID;
+
+        createModal.send(obj);
+    },
+
+    send: function(obj) {
+        if(createModal.uploading) 
+        {
+            alert("Please wait for the upload to complete!");
+            return;
+        }
+
+        createModal.uploading = true;
+
+        let myform = new FormData();
+
+        for(key in obj) 
+        {
+            myform.append(key, obj[key]);
+        }
+
+        let xm = new XMLHttpRequest();
+        
+        xm.addEventListener('error', function(e) 
+        {
+            alert("An error occured! Please check your connection");
+        });
+
+        // Handle changes in the request state
+        xm.addEventListener('readystatechange', function() 
+        {
+            if(xm.readyState == 4)
+            {
+                if(xm.status == 200)
+                {
+                    let obj = JSON.parse(xm.responseText);
+                    if(obj.success)
+                    {
+                        table.refresh();
+                    } else {
+                        alert("Could not complete operation!");
+                    }
+                } else {
+                    console.log(xm.responseText);
+                    alert("An error occured! Please try again later");
+                }
+
+                createModal.uploading = false;
+            }    
+        });
+
+        // Open a POST request api.php and send the FormData
+        xm.open('post', '../api.php', true);
+        xm.send(myform);
+
+        table.refresh();
+    },
+}
+
+// Event Listeners
 createButton.addEventListener("click", toggleMenu.bind(null, createMenu));
+createInput.addEventListener("input", createModal.checkInput);
+createButtonSubmit.addEventListener("click", createModal.new_folder);
 window.addEventListener("click", handleWindowCLick);
 
 function toggleMenu(menu) {
@@ -419,13 +579,10 @@ function toggleMenu(menu) {
 }
 
 function handleWindowCLick(event) {
-    hideMenu(createMenu, createButton, event);
-    menuContent.hide();
-}
-
-function hideMenu(menu, button, event) {
-    if(!button.contains(event.target) && !menu.contains(event.target)) {
-        menu.classList.add("hidden")
+    if(![createButton, createMenu, overlay].some(element => element.contains(event.target))) {
+        createMenu.classList.add("hidden");
+        menuContent.hide();
+        createModal.hideCreateModal();  
     }
 }
 

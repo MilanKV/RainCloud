@@ -1,18 +1,18 @@
 <!-- breadcrumb -->
-<div class="breadcrumb">
+<div id="breadcrumbs" class="breadcrumb">
     <ul>
         <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">Home</a>
+            <a href="#" onclick="table.navigateFolder_id(0)" class="breadcrumb_link">Home</a>
+        </li>
+        <!-- <li class="breadcrumb_item">
+            <a href="#" class="breadcrumb_link">folder1</a>
         </li>
         <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">file1</a>
+            <a href="#" class="breadcrumb_link">folder2</a>
         </li>
         <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">file2</a>
-        </li>
-        <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">file3</a>
-        </li>
+            <a href="#" class="breadcrumb_link">folder3</a>
+        </li> -->
     </ul>
 </div>
 <!-- Home  -->
@@ -29,7 +29,7 @@
                 <ul class="sub-menu hidden" id="createMenu">
                     <div class="menu-item">
                         <li>
-                            <a href="#">
+                            <a href="#" onclick="createModal.showCreateModal()">
                                 <div class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);">
                                         <path d="M20 5h-8.586L9.707 3.293A.997.997 0 0 0 9 3H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2zM4 19V7h16l.002 12H4z">
@@ -98,7 +98,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody id="table-body" class="table-body" oncontextmenu="menuContent.show(event)" onclick="table.select(event)" ondrop="upload.drop(event)" ondragover="upload.dragOver(event)" ondragleave="upload.dropZone.removeHighlight()">
+                <tbody id="table-body" class="table-body" oncontextmenu="menuContent.show(event)" onclick="table.select(event)" ondblclick="table.navigateFolder(event)" ondrop="upload.drop(event)" ondragover="upload.dragOver(event)" ondragleave="upload.dropZone.removeHighlight()">
                     <!-- <tr>
                         <td><input type="checkbox" class="select"></td>
                         <td></td>
@@ -116,7 +116,9 @@
         </div>
     </div>
 </div>
-<!-- Menu Content -->
+
+<!-- Modal -->
+<!-- Start Menu Content -->
 <div id="menuContent" class="menu-content hidden" oncontextmenu="event.preventDefault()">
     <div class="menu-container">
         <div class="menu-heading">
@@ -194,4 +196,43 @@
         </div>
     </div>
 </div>
+<!-- End Menu Content -->
+
+<!-- Start Overlay -->
+<div id="overlay" class="after-open hidden">
+    <!-- Start New Folder  -->
+    <div class="folder">
+        <div class="folder-content">
+            <div class="header-create">
+                <svg xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 512 512" style="stroke: #000000; stroke-width: 4px;"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#ffec64}</style>
+                    <path d="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H288c-10.1 0-19.6-4.7-25.6-12.8L243.2 57.6C231.1 41.5 212.1 32 192 32H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z"/>
+                </svg>
+                <h2>Create Folder</h2>
+            </div>
+            <div class="body-create">
+                <div class="folder-name-input">
+                    <label class="folder_name">Name</label>
+                    <span class="name_input">
+                        <input id="new_folder" class="folder_input" oninput="createModal.checkInput()" type="text" placeholder="Folder Name">
+                    </span>
+                </div>
+            </div>
+            <div class="footer-create">
+                <button id="btn-cancel" class="btn-standard" onclick="createModal.hideCreateModal()">
+                    <span class="button-content">Cancel</span>
+                </button>
+                <button id="btn-create" class="btn-standard" disabled>
+                    <span class="button-content">Create</span>
+                </button>
+            </div>
+        </div>
+        <button class="icon-cancel" onclick="createModal.hideCreateModal()">
+            <span class="cancel">
+                <i class="fa-regular fa-x fa-sm"></i>
+            </span>
+        </button>
+    </div>
+    <!-- End New Folder  -->
+</div>
+<!-- End Overlay -->
 <script src="../assets/js/home.js"></script>
