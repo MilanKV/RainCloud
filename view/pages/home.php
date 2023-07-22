@@ -197,7 +197,59 @@
     </div>
 </div>
 <!-- End Menu Content -->
-
+<!-- Start drawer -->
+<div class="drawer-container">
+    <div class="drawer-header">
+        <span class="drawer-title"></span>
+        <div class="drawer-action">
+            <button class="drawer-collapse drawer-btn btn-icon">
+                <span class="drawer-btn-content">
+                    <i class="fa-solid fa-chevron-up fa-sm"></i>            
+                </span>
+            </button>
+            <button class="drawer-cancel drawer-btn btn-icon">
+                <span class="drawer-btn-content">
+                    <i class="fa-regular fa-x fa-sm"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="drawer-body-footer">
+        <div class="drawer-body">
+            <div class="drawer-items">
+                <div class="item-uploading">
+                    <div class="upload-file-row">
+                        <span class="icon-message success">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </span>
+                        <div class="file-content">
+                            <div class="file-row-name">
+                                <span class="file-name">Name</span>
+                                 <span class="file-mess">Uploading</span>
+                            </div>
+                        </div>
+                        <button class="row-btn-cancel btn-icon">
+                            <span class="btn-content">
+                                <i class="fa-regular fa-x fa-lg"></i>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="upload-progress">
+                        <div class="progress-uploading"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="drawer-footer">
+            <button class="upload-more">
+                <span class="button-content">
+                    Upload More
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- End drawer  -->
 <!-- Start Overlay -->
 <div id="overlay" class="after-open hidden">
     <!-- Start New Folder  -->
