@@ -176,9 +176,9 @@ const table = {
 
     refresh: function() 
     {
-        let myform = new FormData();
-        myform.append('data_type', 'get_files');
-        myform.append('folder_id', FOLDER_ID);
+        let data = new FormData();
+        data.append('data_type', 'get_files');
+        data.append('folder_id', FOLDER_ID);
 
         let xm = new XMLHttpRequest();
         xm.addEventListener('readystatechange', function() 
@@ -188,7 +188,7 @@ const table = {
                 if(xm.status == 200)
                 {
 
-                    console.log(JSON.stringify(JSON.parse(xm.responseText), null, 2));
+                    // console.log(JSON.stringify(JSON.parse(xm.responseText), null, 2));
                     // Recreate table
                     let tbody = document.querySelector(".table-body");
                     tbody.innerHTML = "";
@@ -292,13 +292,13 @@ const table = {
 
         // Open a POST request api.php and send the FormData
         xm.open('post', '../api.php', true);
-        xm.send(myform);
+        xm.send(data);
     },
 
     logout: function() 
     {
-        let myform = new FormData();
-        myform.append('data_type', 'user_signout');
+        let data = new FormData();
+        data.append('data_type', 'user_signout');
 
         let xm = new XMLHttpRequest();
 			xm.addEventListener('readystatechange',function()
@@ -318,89 +318,176 @@ const table = {
 			});
 
 			xm.open('post', '../api.php', true);
-			xm.send(myform);
+			xm.send(data);
     },
 };
 
+const xhrArray = [];
 const upload = {
-
+    
     uploading: false,
-
     // Function to trigger the file upload
-    uploadBtn: function() 
-    {
-        document.getElementById("file-upload").click();
+    uploadBtn: function() {
+        // Upload-Main 
+        document.getElementById("upload-btn").addEventListener("click", function() {
+            document.getElementById("file-upload").click();
+        });
+        // Upload-More 
+        document.getElementById("upload-more-btn").addEventListener("click", function() {
+            document.getElementById("file-upload").click();
+        });
     },
-
 
     // Function to handle the file upload process
     send: function(files) 
     {
-
         if(upload.uploading) 
         {
-            alert("Please wait for the upload to complete!");
+            // alert("Please wait for the upload to complete!");
             return;
         }
 
         // Upload multiple files using FormData
         upload.uploading = true;
 
-        let myform = new FormData();
-
-        myform.append('data_type', 'upload_files');
-        myform.append('folder_id', FOLDER_ID);
+        let data = new FormData();
+        data.append('data_type', 'upload_files');
+        data.append('folder_id', FOLDER_ID);
 
         let file_size = 0;
+
         for(var i = 0; i < files.length; i++) 
         {
             file_size += files[i].size;
-            myform.append('file'+i, files[i]);
+            data.append('files[]', files[i]);
         }
 
         if(parseInt(SPACE_OCCUPIED) + parseInt(file_size) > (SPACE_TOTAL * (1024 * 1024 * 1024)))
         {
             alert("There is not enough space");
+            upload.uploading = false;
             return;
         }
+        for (let i = 0; i < files.length; i++) {
+            const fileIndex = i;
+            const file = files[i];
+            let dataForFile = new FormData();
+            
+            dataForFile.append('data_type', 'upload_files');
+            dataForFile.append('folder_id', FOLDER_ID);
+            dataForFile.append('files[]', files[i]);
 
-        let xm = new XMLHttpRequest();
-        
-        xm.addEventListener('error', function(e) 
-        {
-            alert("An error occured! Please check your connection");
+            // Create XMLHttpRequest for each file
+            let xm = new XMLHttpRequest();
+            xhrArray.push(xm);
 
-        });
-
-        // Handle changes in the request state
-        xm.addEventListener('readystatechange', function() 
-        {
-            if(xm.readyState == 4)
+            xm.addEventListener('error', function(e) 
             {
-                if(xm.status == 200)
-                {
-                    let obj = JSON.parse(xm.responseText);
-                    if(obj.success)
-                    {
-                        alert("Upload complete!");
-                        table.refresh();
+                alert("An error occured! Please check your connection");
+
+            });
+
+            // Handle changes in the request state
+            xm.addEventListener('readystatechange', function() 
+            {
+                if(xm.readyState == 4) {
+                    if(xm.status == 200) {
+                        let obj = JSON.parse(xm.responseText);
+                        if(obj.success)
+                        {
+                            // alert("Upload complete!");
+                            table.refresh();
+                        } else {
+                            alert("Could not complete upload!");
+                        }
                     } else {
-                        alert("Could not complete upload!");
+                        console.log(xm.responseText);
+                        // alert("An error occured! Please try again later");
                     }
-                } else {
-                    console.log(xm.responseText);
-                    alert("An error occured! Please try again later");
+
+                    upload.uploading = false;
+                }    
+            });
+            // Open a POST request api.php and send the FormData
+            xm.open('post', '../api.php', true);
+
+            // Add the progress event listener to track the progress
+            xm.upload.addEventListener('progress', function (event) {
+                if (event.lengthComputable) {
+                    const progressPercentage = (event.loaded / event.total) * 100;
+                    upload.displayProgress(fileIndex, progressPercentage, file); // Update progress for the first file
                 }
-
-                upload.uploading = false;
-            }    
-        });
-
-        // Open a POST request api.php and send the FormData
-        xm.open('post', '../api.php', true);
-        xm.send(myform);
+            });
+            xm.send(dataForFile);
+        }
     },
 
+    // Function to display uploading progress for each file
+    displayProgress: function(fileIndex, progressPercentage, file) {
+        const progressContainer = document.querySelector('.item-uploading');
+        let fileItem = progressContainer.querySelector(`[data-file-index="${fileIndex}"]`);
+        
+        // If file item doesn't exist, create a new one
+        if (!fileItem) {
+        const fileItemTemplate = document.createElement('div');
+        fileItemTemplate.classList.add('upload-file-row');
+        fileItemTemplate.setAttribute('data-file-index', fileIndex);
+        fileItemTemplate.innerHTML = `
+            <span class="icon-message success">
+                <i class="fa-regular fa-circle-check"></i>
+            </span>
+            <div class="file-content">
+                <div class="file-row-name">
+                    <span class="file-name">${truncateString(file.name, 30)}</span>
+                    <div class="uploading-info">
+                        <span id="Uploading-process" class="file-mess">Uploading... 0%</span>
+                        <span id="dataTransfer" class="file-mess"></span>
+                        <span id="timeLeft" class="file-mess"></span>
+                    </div>
+                </div>
+            </div>
+            <button class="row-btn-cancel btn-icon">
+                <span class="btn-content">
+                    <i class="fa-regular fa-x fa-lg"></i>
+                </span>
+            </button>
+        `;
+        progressContainer.appendChild(fileItemTemplate);
+    
+        const progressBarTemplate = document.createElement('div');
+        progressBarTemplate.classList.add('upload-progress');
+        progressBarTemplate.innerHTML = '<div class="progress-uploading"></div>';
+        progressContainer.appendChild(progressBarTemplate);
+
+        fileItem = fileItemTemplate;
+        }
+    
+        const progressBar = fileItem.nextElementSibling.querySelector('.progress-uploading');
+        progressBar.style.width = `${progressPercentage}%`;
+        fileItem.querySelector('.file-mess').textContent = `Uploading... ${Math.floor(progressPercentage)}%`;
+
+        // Get the cancel button for the current file
+        const cancelButton = fileItem.querySelector('.row-btn-cancel');
+        // Add an event listener to the cancel button
+        cancelButton.addEventListener('click', function () {
+            upload.cancelFileUpload(fileIndex);
+        });
+    },  
+    cancelFileUpload: function(fileIndex) {
+        if (xhrArray[fileIndex]) {
+            xhrArray[fileIndex].abort(); // Abort the corresponding XMLHttpRequest
+
+            const progressContainer = document.querySelector('.item-uploading');
+            const fileItem = progressContainer.querySelector(`[data-file-index="${fileIndex}"]`);
+            if (fileItem) {
+                const progressBar = fileItem.nextElementSibling;
+                progressContainer.removeChild(fileItem);
+                progressContainer.removeChild(progressBar);
+            }
+
+            xhrArray[fileIndex] = null; // Clear the reference from the array
+        }
+    },
     // Dropzone highlight functionality
     dropZone: 
     {
@@ -431,6 +518,7 @@ const upload = {
         upload.dropZone.highlight();
     },
 }
+upload.uploadBtn();
 
 var file_details = {
     
@@ -455,8 +543,11 @@ var file_details = {
             fileIcon.style.display = "block";
             fileIcon.innerHTML = row.icon;
         }
+
+        // Get the truncated file name (maximum 20 characters)
+        let truncatedFileName = truncateString(row.file_name, 20);
         // Update the file details in the panel
-        file_details_panel.querySelector(".file_name").textContent = row.file_name;
+        file_details_panel.querySelector(".file_name").textContent = truncatedFileName;
         file_details_panel.querySelector(".size").textContent = row.file_size;
         file_details_panel.querySelector(".type").textContent = row.file_type;
         file_details_panel.querySelector(".date_created").textContent = row.date_created;
@@ -480,6 +571,7 @@ const createMenu = document.getElementById("createMenu");
 const overlay = document.getElementById('overlay');
 const createInput = document.querySelector('#overlay input');
 const createButtonSubmit = document.getElementById('btn-create');
+const arrowDrawer = document.querySelector('#arrowdrawer');
 
 // Create Modal
 const createModal = {
@@ -523,11 +615,11 @@ const createModal = {
 
         createModal.uploading = true;
 
-        let myform = new FormData();
+        let data = new FormData();
 
         for(key in obj) 
         {
-            myform.append(key, obj[key]);
+            data.append(key, obj[key]);
         }
 
         let xm = new XMLHttpRequest();
@@ -562,7 +654,7 @@ const createModal = {
 
         // Open a POST request api.php and send the FormData
         xm.open('post', '../api.php', true);
-        xm.send(myform);
+        xm.send(data);
 
         table.refresh();
     },
@@ -583,6 +675,27 @@ function handleWindowCLick(event) {
         createMenu.classList.add("hidden");
         menuContent.hide();
         createModal.hideCreateModal();  
+    }
+}
+
+function drawerCollapse() {
+    const drawerBody = document.querySelector('.drawer-body-footer');
+    if (drawerBody.style.display === '' || drawerBody.style.display === 'flex') {
+        drawerBody.style.display = 'none';
+    } else {
+        drawerBody.style.display = 'flex';
+    }
+    arrowDrawer.classList.toggle("rotate");
+}
+
+// Function to truncate a string to a specified length
+function truncateString(str, maxLength) {
+    if (str.length <= maxLength) {
+        return str;
+    } else {
+        const firstPartLength = Math.floor((maxLength - 3) / 2);
+        const lastPartLength = maxLength - 3 - firstPartLength;
+        return str.substring(0, firstPartLength) + '...' + str.substring(str.length - lastPartLength);
     }
 }
 

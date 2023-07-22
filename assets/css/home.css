@@ -160,6 +160,10 @@
     display: none;
 }
 
+.rotate {
+    transform: rotate(180deg);
+}
+
 .btn-icon {
     position: relative;
     height: 32px;

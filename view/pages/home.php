@@ -4,15 +4,6 @@
         <li class="breadcrumb_item">
             <a href="#" onclick="table.navigateFolder_id(0)" class="breadcrumb_link">Home</a>
         </li>
-        <!-- <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">folder1</a>
-        </li>
-        <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">folder2</a>
-        </li>
-        <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">folder3</a>
-        </li> -->
     </ul>
 </div>
 <!-- Home  -->
@@ -21,7 +12,7 @@
     <div class="nav_toolbar">
         <div class="action_toolbar">
             <div class="brws-buttons">
-                <button class="btn" onclick="upload.uploadBtn()">Upload</button>
+                <button class="btn" id="upload-btn">Upload</button>
                 <input onchange="upload.send(this.files)" type="file" id="file-upload" class="hidden" multiple>
             </div>
             <div class="brws-buttons">
@@ -199,12 +190,12 @@
 <!-- End Menu Content -->
 <!-- Start drawer -->
 <div class="drawer-container">
-    <div class="drawer-header">
+    <div onclick="drawerCollapse()" class="drawer-header">
         <span class="drawer-title"></span>
         <div class="drawer-action">
             <button class="drawer-collapse drawer-btn btn-icon">
                 <span class="drawer-btn-content">
-                    <i class="fa-solid fa-chevron-up fa-sm"></i>            
+                    <i id="arrowdrawer" class="fa-solid fa-chevron-down fa-sm"></i>            
                 </span>
             </button>
             <button class="drawer-cancel drawer-btn btn-icon">
@@ -218,7 +209,7 @@
         <div class="drawer-body">
             <div class="drawer-items">
                 <div class="item-uploading">
-                    <div class="upload-file-row">
+                    <!-- <div class="upload-file-row">
                         <span class="icon-message success">
                             <i class="fa-regular fa-circle-check"></i>
                         </span>
@@ -236,12 +227,12 @@
                     </div>
                     <div class="upload-progress">
                         <div class="progress-uploading"></div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
         <div class="drawer-footer">
-            <button class="upload-more">
+            <button id="upload-more-btn" class="upload-more">
                 <span class="button-content">
                     Upload More
                 </span>
