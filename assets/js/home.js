@@ -322,12 +322,21 @@ const table = {
     },
 };
 
+const uploadData = {
+    startTime: null,
+    uploadedBytes: 0,
+    speed: 0,
+};
 
 const xhrArray = [];
 let fileIndexCounter = 0;
 const upload = {
-    
+    fileTotalSizes: [],
+    uploadedBytes: 0,
+    totalItemUploading: 0, // Number of total items currently being uploaded
+    totalCompleted: 0, // Number of completed uploads
     uploading: false,
+    uploadStartTime: null,
     // Function to trigger the file upload
     uploadBtn: function() {
         // Upload-Main 
@@ -346,6 +355,10 @@ const upload = {
             // Clear the item-uploading container
             const itemUploadingContainer = document.querySelector('.item-uploading');
             itemUploadingContainer.innerHTML = '';
+
+            // Reset the counters
+            upload.totalItemUploading = 0;
+            upload.totalCompleted = 0;
         });
     },
 
@@ -363,6 +376,8 @@ const upload = {
 
         // Upload multiple files using FormData
         upload.uploading = true;
+        upload.uploadStartTime = new Date().getTime(); // array to store start times for each file
+        upload.fileTotalSizes = []; // array to store total sizes for each file
 
         let data = new FormData();
         data.append('data_type', 'upload_files');
@@ -375,10 +390,11 @@ const upload = {
             file_size += files[i].size;
             data.append('files[]', files[i]);
         }
+        
 
         if(parseInt(SPACE_OCCUPIED) + parseInt(file_size) > (SPACE_TOTAL * (1024 * 1024 * 1024)))
         {
-            alert("There is not enough space");
+            alert("There is not enough space. The maximum allowed size is 2GB.");
             upload.uploading = false;
             return;
         }
@@ -394,6 +410,7 @@ const upload = {
             // Create XMLHttpRequest for each file
             let xm = new XMLHttpRequest();
             xhrArray.push(xm);
+            upload.fileTotalSizes[fileIndex] = files[i].size;
 
             xm.addEventListener('error', function(e) 
             {
@@ -410,6 +427,8 @@ const upload = {
                         if(obj.success)
                         {
                             // alert("Upload complete!");
+                            upload.totalCompleted++;
+                            upload.updateProgressTitle();
                             table.refresh();
                         } else {
                             alert("Could not complete upload!");
@@ -418,7 +437,6 @@ const upload = {
                         console.log(xm.responseText);
                         // alert("An error occured! Please try again later");
                     }
-
                     upload.uploading = false;
                 }    
             });
@@ -429,10 +447,14 @@ const upload = {
             xm.upload.addEventListener('progress', function (event) {
                 if (event.lengthComputable) {
                     const progressPercentage = (event.loaded / event.total) * 100;
+                    upload.uploadedBytes = event.loaded; // Update uploaded bytes
                     upload.displayProgress(fileIndex, progressPercentage, file); // Update progress for the first file
                 }
             });
             xm.send(dataForFile);
+            upload.totalItemUploading++; // Increment the number of total items currently being uploaded
+            upload.updateProgressTitle(); // Update the progress title
+            upload.uploadStartTime[fileIndex] = new Date().getTime();
         }
     },
 
@@ -490,10 +512,63 @@ const upload = {
             progressMessage.textContent = `Uploading... ${Math.floor(progressPercentage)}%`;
             iconElement.className = 'fa-solid fa-spinner';
             cancelButton.style.display = 'block'; // Show the cancel button
+
+            // Calculate dataTransfer
+            const uploadedSize = upload.uploadedBytes;
+            const totalSize = upload.fileTotalSizes[fileIndex];
+            const dataTransferElement = fileItem.querySelector('#dataTransfer');
+            
+            dataTransferElement.textContent = `${formatSize(uploadedSize)} / ${formatSize(totalSize)}`
+
+            // Calculate timeLeft
+            const timeLeftElement = fileItem.querySelector('#timeLeft');
+
+            // Initialize uploadData for the current file if not done yet
+            if (!uploadData.startTime) {
+                uploadData.startTime = new Date().getTime();
+                uploadData.uploadedBytes = uploadedSize;
+            }
+    
+            const currentTime = new Date().getTime();
+            const elapsedTime = (currentTime - uploadData.startTime) / 1000; // Elapsed time in seconds
+    
+            // Calculate the upload speed as the average speed from the beginning
+            uploadData.speed = uploadedSize / elapsedTime;
+    
+            if (uploadData.speed <= 0) {
+                timeLeftElement.textContent = 'Calculating...';
+            } else {
+                const remainingBytes = totalSize - uploadedSize;
+                const timeLeftSeconds = remainingBytes / uploadData.speed; // Estimated time left in seconds
+        
+                const hours = Math.floor(timeLeftSeconds / 3600);
+                const minutes = Math.floor((timeLeftSeconds % 3600) / 60);
+                const seconds = Math.floor(timeLeftSeconds % 60);
+        
+                let timeLeftText = '';
+        
+                if (hours > 0) {
+                    timeLeftText += `${hours}h `;
+                }
+        
+                if (minutes > 0 || (hours > 0 && seconds > 0)) {
+                    timeLeftText += `${minutes}m `;
+                }
+        
+                if (seconds > 0) {
+                    timeLeftText += `${seconds}s`;
+                }
+        
+                timeLeftElement.textContent = timeLeftText;
+            }
         } else {
+            const dataTransferElement = fileItem.querySelector('#dataTransfer');
+            const timeLeftElement = fileItem.querySelector('#timeLeft');
             progressMessage.textContent = 'Completed';
             iconElement.className = 'fa-regular fa-circle-check';
             cancelButton.style.display = 'none';
+            dataTransferElement.style.display = 'none';
+            timeLeftElement.style.display = 'none';
             // Check if the progress bar exists (uploaded successfully), then remove it
             const progressBarToRemove = progressContainer.querySelector(`.upload-progress[data-progress-file-index="${fileIndex}"]`);
             if (progressBarToRemove) {
@@ -530,6 +605,15 @@ const upload = {
                 }
             }
             xhrArray[fileIndex] = null; // Clear the reference from the array
+        }
+    },
+    // Function to update the progress title
+    updateProgressTitle: function() {
+        const progressTitle = document.querySelector('.drawer-title');
+        if (upload.totalItemUploading === upload.totalCompleted) {
+            progressTitle.textContent = `${upload.totalCompleted} of ${upload.totalCompleted} uploads completed`;
+        } else {
+            progressTitle.textContent = `${upload.totalCompleted} of ${upload.totalItemUploading} uploads completed`;
         }
     },
     // Dropzone highlight functionality
@@ -722,6 +806,8 @@ function handleWindowCLick(event) {
     }
 }
 
+// Helpers
+// progressContainer Collapse
 function drawerCollapse() {
     const drawerBody = document.querySelector('.drawer-body-footer');
     if (drawerBody.style.display === '' || drawerBody.style.display === 'flex') {
@@ -740,6 +826,18 @@ function truncateString(str, maxLength) {
         const firstPartLength = Math.floor((maxLength - 3) / 2);
         const lastPartLength = maxLength - 3 - firstPartLength;
         return str.substring(0, firstPartLength) + '...' + str.substring(str.length - lastPartLength);
+    }
+}
+// convert the file size B,KB,MB,GB
+function formatSize(bytes) {
+    if (bytes >= 1024 * 1024 * 1024) {
+        return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+    } else if (bytes >= 1024 * 1024) {
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    } else if (bytes >= 1024) {
+        return (bytes / 1024).toFixed(2) + ' KB';
+    } else {
+        return bytes + ' B';
     }
 }
 
