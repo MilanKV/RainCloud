@@ -189,7 +189,7 @@
 </div>
 <!-- End Menu Content -->
 <!-- Start drawer -->
-<div class="drawer-container">
+<div class="drawer-container hidden">
     <div onclick="drawerCollapse()" class="drawer-header">
         <span class="drawer-title"></span>
         <div class="drawer-action">
@@ -222,6 +222,11 @@
                         <button class="row-btn-cancel btn-icon">
                             <span class="btn-content">
                                 <i class="fa-regular fa-x fa-lg"></i>
+                            </span>
+                        </button>
+                        <button class="row-btn-retry btn-icon">
+                            <span class="btn-content">
+                                <i class="fa-solid fa-redo fa-lg"></i>
                             </span>
                         </button>
                     </div>

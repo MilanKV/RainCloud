@@ -322,7 +322,9 @@ const table = {
     },
 };
 
+
 const xhrArray = [];
+let fileIndexCounter = 0;
 const upload = {
     
     uploading: false,
@@ -336,6 +338,15 @@ const upload = {
         document.getElementById("upload-more-btn").addEventListener("click", function() {
             document.getElementById("file-upload").click();
         });
+        // Handle the click on the "Cancel" button to hide the progressContainer
+        document.querySelector(".drawer-cancel").addEventListener("click", function() {
+            const progressContainer = document.querySelector('.drawer-container');
+            progressContainer.style.display = "none";
+
+            // Clear the item-uploading container
+            const itemUploadingContainer = document.querySelector('.item-uploading');
+            itemUploadingContainer.innerHTML = '';
+        });
     },
 
     // Function to handle the file upload process
@@ -346,6 +357,9 @@ const upload = {
             // alert("Please wait for the upload to complete!");
             return;
         }
+        // Show the progress container when the uploading starts
+        const progressContainer = document.querySelector('.drawer-container');
+        progressContainer.style.display = "block";
 
         // Upload multiple files using FormData
         upload.uploading = true;
@@ -369,7 +383,7 @@ const upload = {
             return;
         }
         for (let i = 0; i < files.length; i++) {
-            const fileIndex = i;
+            const fileIndex = fileIndexCounter++;
             const file = files[i];
             let dataForFile = new FormData();
             
@@ -429,46 +443,64 @@ const upload = {
         
         // If file item doesn't exist, create a new one
         if (!fileItem) {
-        const fileItemTemplate = document.createElement('div');
-        fileItemTemplate.classList.add('upload-file-row');
-        fileItemTemplate.setAttribute('data-file-index', fileIndex);
-        fileItemTemplate.innerHTML = `
-            <span class="icon-message success">
-                <i class="fa-regular fa-circle-check"></i>
-            </span>
-            <div class="file-content">
-                <div class="file-row-name">
-                    <span class="file-name">${truncateString(file.name, 30)}</span>
-                    <div class="uploading-info">
-                        <span id="Uploading-process" class="file-mess">Uploading... 0%</span>
-                        <span id="dataTransfer" class="file-mess"></span>
-                        <span id="timeLeft" class="file-mess"></span>
+            const fileItemTemplate = document.createElement('div');
+            fileItemTemplate.classList.add('upload-file-row');
+            fileItemTemplate.setAttribute('data-file-index', fileIndex);
+            fileItemTemplate.innerHTML = `
+                <span class="icon-message success">
+                    <i class="fa-regular fa-circle-check"></i>
+                </span>
+                <div class="file-content">
+                    <div class="file-row-name">
+                        <span class="file-name">${truncateString(file.name, 30)}</span>
+                        <div class="uploading-info">
+                            <span id="Uploading-process" class="file-mess">Uploading... 0%</span>
+                            <span id="dataTransfer" class="file-mess"></span>
+                            <span id="timeLeft" class="file-mess"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <button class="row-btn-cancel btn-icon">
-                <span class="btn-content">
-                    <i class="fa-regular fa-x fa-lg"></i>
-                </span>
-            </button>
-        `;
-        progressContainer.appendChild(fileItemTemplate);
-    
-        const progressBarTemplate = document.createElement('div');
-        progressBarTemplate.classList.add('upload-progress');
-        progressBarTemplate.innerHTML = '<div class="progress-uploading"></div>';
-        progressContainer.appendChild(progressBarTemplate);
+                <button class="row-btn-cancel btn-icon">
+                    <span class="btn-content">
+                        <i class="fa-regular fa-x fa-lg"></i>
+                    </span>
+                </button>
+            `;
+            progressContainer.appendChild(fileItemTemplate);
+        
+            const progressBarTemplate = document.createElement('div');
+            progressBarTemplate.setAttribute('data-progress-file-index', fileIndex);
+            progressBarTemplate.classList.add('upload-progress');
+            progressBarTemplate.innerHTML = '<div class="progress-uploading"></div>';
+            progressContainer.appendChild(progressBarTemplate);
 
-        fileItem = fileItemTemplate;
+            fileItem = fileItemTemplate;    
         }
-    
+        
         const progressBar = fileItem.nextElementSibling.querySelector('.progress-uploading');
         progressBar.style.width = `${progressPercentage}%`;
-        fileItem.querySelector('.file-mess').textContent = `Uploading... ${Math.floor(progressPercentage)}%`;
 
+        // Get the icon element
+        const iconElement = fileItem.querySelector('.icon-message i');
         // Get the cancel button for the current file
-        const cancelButton = fileItem.querySelector('.row-btn-cancel');
-        // Add an event listener to the cancel button
+        const cancelButton = fileItem.querySelector('.row-btn-cancel'); 
+
+        const progressMessage = fileItem.querySelector('.file-mess');
+        if(progressPercentage < 100) {
+            progressMessage.textContent = `Uploading... ${Math.floor(progressPercentage)}%`;
+            iconElement.className = 'fa-solid fa-spinner';
+            cancelButton.style.display = 'block'; // Show the cancel button
+        } else {
+            progressMessage.textContent = 'Completed';
+            iconElement.className = 'fa-regular fa-circle-check';
+            cancelButton.style.display = 'none';
+            // Check if the progress bar exists (uploaded successfully), then remove it
+            const progressBarToRemove = progressContainer.querySelector(`.upload-progress[data-progress-file-index="${fileIndex}"]`);
+            if (progressBarToRemove) {
+                progressContainer.removeChild(progressBarToRemove);
+            }
+        }
+        
         cancelButton.addEventListener('click', function () {
             upload.cancelFileUpload(fileIndex);
         });
@@ -480,11 +512,23 @@ const upload = {
             const progressContainer = document.querySelector('.item-uploading');
             const fileItem = progressContainer.querySelector(`[data-file-index="${fileIndex}"]`);
             if (fileItem) {
-                const progressBar = fileItem.nextElementSibling;
-                progressContainer.removeChild(fileItem);
-                progressContainer.removeChild(progressBar);
-            }
+                // Update the progress message to "Cancelled"
+                const progressMessage = fileItem.querySelector('.file-mess');
+                progressMessage.textContent = 'Cancelled';
 
+                // Update the icon to the exclamation-triangle icon for cancelled
+                const iconElement = fileItem.querySelector('.icon-message i');
+                iconElement.className = 'fa-solid fa-triangle-exclamation';
+
+                // Hide the cancel button
+                const cancelButton = fileItem.querySelector('.row-btn-cancel');
+                cancelButton.style.display = 'none';
+
+                const progressBar = progressContainer.querySelector(`.upload-progress[data-progress-file-index="${fileIndex}"]`);
+                if (progressBar) {
+                    progressContainer.removeChild(progressBar);
+                }
+            }
             xhrArray[fileIndex] = null; // Clear the reference from the array
         }
     },
