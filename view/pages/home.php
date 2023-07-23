@@ -4,15 +4,6 @@
         <li class="breadcrumb_item">
             <a href="#" onclick="table.navigateFolder_id(0)" class="breadcrumb_link">Home</a>
         </li>
-        <!-- <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">folder1</a>
-        </li>
-        <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">folder2</a>
-        </li>
-        <li class="breadcrumb_item">
-            <a href="#" class="breadcrumb_link">folder3</a>
-        </li> -->
     </ul>
 </div>
 <!-- Home  -->
@@ -21,7 +12,7 @@
     <div class="nav_toolbar">
         <div class="action_toolbar">
             <div class="brws-buttons">
-                <button class="btn" onclick="upload.uploadBtn()">Upload</button>
+                <button class="btn" id="upload-btn">Upload</button>
                 <input onchange="upload.send(this.files)" type="file" id="file-upload" class="hidden" multiple>
             </div>
             <div class="brws-buttons">
@@ -197,7 +188,64 @@
     </div>
 </div>
 <!-- End Menu Content -->
-
+<!-- Start drawer -->
+<div class="drawer-container hidden">
+    <div onclick="drawerCollapse()" class="drawer-header">
+        <span class="drawer-title"></span>
+        <div class="drawer-action">
+            <button class="drawer-collapse drawer-btn btn-icon">
+                <span class="drawer-btn-content">
+                    <i id="arrowdrawer" class="fa-solid fa-chevron-down fa-sm"></i>            
+                </span>
+            </button>
+            <button class="drawer-cancel drawer-btn btn-icon">
+                <span class="drawer-btn-content">
+                    <i class="fa-regular fa-x fa-sm"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="drawer-body-footer">
+        <div class="drawer-body">
+            <div class="drawer-items">
+                <div class="item-uploading">
+                    <!-- <div class="upload-file-row">
+                        <span class="icon-message success">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </span>
+                        <div class="file-content">
+                            <div class="file-row-name">
+                                <span class="file-name">Name</span>
+                                 <span class="file-mess">Uploading</span>
+                            </div>
+                        </div>
+                        <button class="row-btn-cancel btn-icon">
+                            <span class="btn-content">
+                                <i class="fa-regular fa-x fa-lg"></i>
+                            </span>
+                        </button>
+                        <button class="row-btn-retry btn-icon">
+                            <span class="btn-content">
+                                <i class="fa-solid fa-redo fa-lg"></i>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="upload-progress">
+                        <div class="progress-uploading"></div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="drawer-footer">
+            <button id="upload-more-btn" class="upload-more">
+                <span class="button-content">
+                    Upload More
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- End drawer  -->
 <!-- Start Overlay -->
 <div id="overlay" class="after-open hidden">
     <!-- Start New Folder  -->

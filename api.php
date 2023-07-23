@@ -21,7 +21,8 @@ $logged_in = $info['LOGGED_IN'];
 $without_login = ['user_signup', 'user_login'];
 if(!$info['LOGGED_IN'] && (!in_array($info['data_type'], $without_login)))
 {
-    echo json_encode($info);
+    $response = json_encode($info);
+    echo $response;
     die;
 }
 
@@ -47,8 +48,22 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
 
             if($user_id !== null) {
 
-                foreach ($_FILES as $key => $file) {
-        
+                foreach ($_FILES['files']['tmp_name'] as $index => $tmpName) {
+                    
+                    $file = [
+                        'name' => $_FILES['files']['name'][$index],
+                        'type' => $_FILES['files']['type'][$index],
+                        'tmp_name' => $tmpName,
+                        'error' => $_FILES['files']['error'][$index],
+                        'size' => $_FILES['files']['size'][$index]
+                    ];
+
+                    // Check if the file upload was canceled
+                    if ($file['error'] === UPLOAD_ERR_PARTIAL) {
+                        // The file upload was canceled, so skip processing this file
+                        continue;
+                    }
+
                     $destination = $folder. time() . $file['name'];
                     if(file_exists($destination))
                         $destination = $folder. time() . rand(0,9999) . $file['name'];
@@ -283,4 +298,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
     }
 } 
 
-echo json_encode($info);
+header('Content-Type: application/json');
+
+$response = json_encode($info);
+echo $response;
