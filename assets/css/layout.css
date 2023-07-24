@@ -692,7 +692,7 @@ body {
 
 .body-container .file-detail .details .properties .title {
     display: flex;
-    width: 92px;
+    width: 88px;
     color: var(--black2);
 }
 

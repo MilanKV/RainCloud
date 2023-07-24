@@ -164,6 +164,26 @@
     transform: rotate(180deg);
 }
 
+.icon-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+
+.loading {
+    color: blue;
+}
+
 .btn-icon {
     position: relative;
     height: 32px;
@@ -415,14 +435,21 @@
     justify-content: space-between;
     height: 40px;
     margin: 0 -1px;
-    padding: 0 16px;
     cursor: pointer;
     box-sizing: content-box;
     border: 1px solid var(--border-bold);
     background-color: var(--lightb);
 }
 
-.drawer-container .drawer-header .drawer-title {
+.drawer-container .drawer-header .collapse {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    padding: 0 0 0 16px;
+}
+.drawer-container .drawer-header .collapse .drawer-title {
     padding: 0;
     font-size: 14px;
     font-weight: 400;
@@ -432,12 +459,17 @@
     color: var(--text-base);
 }
 
+.drawer-container .drawer-header .collapse .drawer-btn,
 .drawer-container .drawer-header .drawer-btn {
     margin-left: 4px;
 }
 
 .drawer-container .drawer-header .drawer-btn:hover {
     background-color: var(--lightl);
+}
+
+.drawer-container .drawer-header .drawer-cancel {
+    margin-right: 8px;
 }
 
 .drawer-container .drawer-header .drawer-btn .drawer-btn-content {
@@ -497,15 +529,6 @@
     justify-content: flex-start;
     height: 54px;
     padding: 0 16px;
-}
-
-.success {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    
 }
 
 .drawer-container .drawer-body-footer .drawer-body .drawer-items .item-uploading .upload-file-row .file-content {

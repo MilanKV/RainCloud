@@ -469,7 +469,7 @@ const upload = {
             fileItemTemplate.classList.add('upload-file-row');
             fileItemTemplate.setAttribute('data-file-index', fileIndex);
             fileItemTemplate.innerHTML = `
-                <span class="icon-message success">
+                <span class="icon-message">
                     <i class="fa-regular fa-circle-check"></i>
                 </span>
                 <div class="file-content">
@@ -561,6 +561,10 @@ const upload = {
         
                 timeLeftElement.textContent = timeLeftText;
             }
+
+            // Add appropriate classes based on the current progress state
+            fileItem.querySelector('.icon-message').classList.add('loading');
+            fileItem.querySelector('.icon-message').classList.remove('success', 'error');
         } else {
             const dataTransferElement = fileItem.querySelector('#dataTransfer');
             const timeLeftElement = fileItem.querySelector('#timeLeft');
@@ -569,6 +573,15 @@ const upload = {
             cancelButton.style.display = 'none';
             dataTransferElement.style.display = 'none';
             timeLeftElement.style.display = 'none';
+
+            // Determine if the upload was cancelled
+            if (xhrArray[fileIndex]) {
+                fileItem.querySelector('.icon-message').classList.add('success');
+                fileItem.querySelector('.icon-message').classList.remove('loading', 'error');
+            } else {
+                fileItem.querySelector('.icon-message').classList.add('error');
+                fileItem.querySelector('.icon-message').classList.remove('loading', 'success');
+            }
             // Check if the progress bar exists (uploaded successfully), then remove it
             const progressBarToRemove = progressContainer.querySelector(`.upload-progress[data-progress-file-index="${fileIndex}"]`);
             if (progressBarToRemove) {
@@ -598,6 +611,15 @@ const upload = {
                 // Hide the cancel button
                 const cancelButton = fileItem.querySelector('.row-btn-cancel');
                 cancelButton.style.display = 'none';
+
+                const dataTransferElement = fileItem.querySelector('#dataTransfer');
+                const timeLeftElement = fileItem.querySelector('#timeLeft');
+                dataTransferElement.style.display = 'none'; // Hide dataTransfer when cancelled
+                timeLeftElement.style.display = 'none'; // Hide timeLeft when cancelled
+
+                // Add appropriate class to the icon-message element
+                fileItem.querySelector('.icon-message').classList.add('error');
+                fileItem.querySelector('.icon-message').classList.remove('loading', 'success');
 
                 const progressBar = progressContainer.querySelector(`.upload-progress[data-progress-file-index="${fileIndex}"]`);
                 if (progressBar) {

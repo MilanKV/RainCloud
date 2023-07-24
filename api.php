@@ -58,6 +58,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
                         'size' => $_FILES['files']['size'][$index]
                     ];
 
+                    // Check if the file already exists in the database
+                    if (checkFileExists($file['name'])) {
+                        continue; // Skip this file and proceed with the next one
+                    }
+
                     // Check if the file upload was canceled
                     if ($file['error'] === UPLOAD_ERR_PARTIAL) {
                         // The file upload was canceled, so skip processing this file
