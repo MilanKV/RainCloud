@@ -190,27 +190,29 @@
 <!-- End Menu Content -->
 <!-- Start drawer -->
 <div class="drawer-container hidden">
-    <div onclick="drawerCollapse()" class="drawer-header">
-        <span class="drawer-title"></span>
-        <div class="drawer-action">
-            <button class="drawer-collapse drawer-btn btn-icon">
-                <span class="drawer-btn-content">
-                    <i id="arrowdrawer" class="fa-solid fa-chevron-down fa-sm"></i>            
-                </span>
-            </button>
-            <button class="drawer-cancel drawer-btn btn-icon">
-                <span class="drawer-btn-content">
-                    <i class="fa-regular fa-x fa-sm"></i>
-                </span>
-            </button>
+    <div class="drawer-header">
+        <div onclick="drawerCollapse()" class="collapse">
+            <span class="drawer-title"></span>
+            <div class="drawer-action">
+                <button class="drawer-collapse drawer-btn btn-icon">
+                    <span class="drawer-btn-content">
+                        <i id="arrowdrawer" class="fa-solid fa-chevron-down fa-sm"></i>            
+                    </span>
+                </button>
+            </div>
         </div>
+        <button class="drawer-cancel drawer-btn btn-icon">
+            <span class="drawer-btn-content">
+                <i class="fa-regular fa-x fa-sm"></i>
+            </span>
+        </button>
     </div>
     <div class="drawer-body-footer">
         <div class="drawer-body">
             <div class="drawer-items">
                 <div class="item-uploading">
                     <!-- <div class="upload-file-row">
-                        <span class="icon-message success">
+                        <span class="icon-message">
                             <i class="fa-regular fa-circle-check"></i>
                         </span>
                         <div class="file-content">

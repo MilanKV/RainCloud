@@ -52,3 +52,12 @@ function fetchUserId($email)
 
     return null;
 }
+
+// Function to check if a file already exists in the database by its name
+function checkFileExists($filename)
+{
+    $filename = addslashes($filename);
+    $query = "SELECT id FROM drive WHERE file_name = '$filename' LIMIT 1";
+    $row = query($query);
+    return !empty($row);
+}
