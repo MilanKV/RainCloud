@@ -101,7 +101,6 @@
     min-width: 90px;
     max-height: 500px;
     margin-top: 4px;
-    padding: 8px 0;
     list-style: none;
     border: 1px solid var(--lightb);
     box-shadow: var(--box-shadow);
@@ -279,8 +278,8 @@
 
 .selectable-list .table-sortable th:first-child,
 .selectable-list .table-sortable td:first-child {
-    min-height: 39px;
-    max-width: 85px;
+    height: 50px;
+    width: 50px;
 }
 
 .selectable-list .table-sortable th:last-child,
@@ -311,6 +310,54 @@
     text-align: center;
     font-size: 16px;
     line-height: 20px;
+}
+
+.table-sortable tbody tr .no-files-row {
+    pointer-events: none;
+}
+
+.table-sortable tbody tr .no-files-row:hover {
+    background-color: transparent;
+}
+/* Checkbox Custom  */
+
+/* Hide the default checkbox */
+input[type="checkbox"] {
+    display: none;
+}
+
+/* Style the custom checkbox */
+input[type="checkbox"] + label {
+    position: relative;
+    padding-left: 25px; /* Space for the checkbox */
+    cursor: pointer;
+}
+
+/* Style the custom checkbox indicator */
+input[type="checkbox"] + label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #1a1918;
+    background-color: var(--lightl);
+}
+
+/* Style the custom checkbox indicator when checked */
+input[type="checkbox"]:checked + label::before {
+    background-color: #1a1918; /* Custom color for checked checkbox */
+    /* border-color: #007bff; */
+}
+/* Optional: You can add a checkmark to the checked checkbox */
+input[type="checkbox"]:checked + label::after {
+    /* Unicode checkmark character */
+    content: "\2713"; 
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    color: var(--white);
 }
 
 /* Menu Content */
