@@ -57,14 +57,14 @@
                                             </div>
                                         </button>
                                         <div class="user-name">
-                                            <span id="user_name" class="user_name">User</span>
+                                            <span id="user_name" class="user_name"></span>
                                             <div class="user-email">
-                                                <span class="user_email">Email</span>
+                                                <span class="user_email"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="upgrade">
-                                        <span class="text">Your account has 15 GB storage</span>
+                                        <span class="user-space"></span>
                                         <button class="upgrade-btn">
                                             <span class="upgrade-text">Upgrade</span>
                                         </button>
@@ -77,7 +77,7 @@
                                         <span class="menu-item-title">Settings</span>
                                     </div>
                                 </a>
-                                <a onclick="table.logout()" class="link-menu-drop" href="#">
+                                <a onclick="logout()" class="link-menu-drop" href="#">
                                     <div class="menu-item-content">
                                         <span class="menu-item-title">Sign out</span>
                                     </div>
@@ -118,7 +118,7 @@
                         <div class="progress-space space_percent"></div>
                     </div>
                     <div class="storage-space">
-                        <span class="storage rain_space">2GB of 15GB used</span>
+                        <span class="storage rain_space"></span>
                         <a href="#">
                             <i class='bx bx-plus-circle'></i>
                         </a>

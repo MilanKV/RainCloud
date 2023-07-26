@@ -72,7 +72,10 @@
             <table class="table-sortable">
                 <thead>
                     <tr>
-                        <th><input type="checkbox" id="selectAll" class="select" onchange="table.toggleAll(event)"></th>
+                        <th>
+                            <input type="checkbox" id="selectAll" class="select custom-checkbox" onchange="table.toggleAll(event)">
+                            <label class="selectAll hidden" for="selectAll"></label>
+                        </th>
                         <th></th>
                         <th>
                             <span>Name</span>

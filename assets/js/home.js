@@ -73,45 +73,36 @@ const menuContent = {
 const table = {
 
     ROWS: [],
-
+    lastSelectedRow: null, // Store the last selected row
     // Function to handle row selection
     select:function(e) 
     {
         const item = e.target.closest('tr'); 
         const checkbox = item.querySelector('.select');
         const isChecked = checkbox.checked;
-
-        // Handle row selection
-        if (item && e.target.tagName !== 'INPUT') 
-        {
-            const selectedRow = document.querySelector('.row');
-            // Deselect the row if it's already selected
-            if (selectedRow && selectedRow === item) 
-            {
-              selectedRow.classList.remove('row');
-              checkbox.checked = false;
-              file_details.hide();
-            } else {
-                // Select the clicked row and show file details
-                if(selectedRow) 
-                {
-                    selectedRow.classList.remove('row');
-                    selectedRow.querySelector('.select').checked = false;
-                }
-                item.classList.add('row');
-                checkbox.checked = true;
-                let id = item.getAttribute('id').replace("tr_", "");
-                file_details.show(id);
-            }
-        } 
+        // Update the selectAll checkbox state based on the number of checked checkboxes
+        const tbodyCheckboxes  = document.querySelectorAll('.table-body .select');
+        const selectAllCheckbox = document.getElementById("selectAll");
+        // Check if right-click (context menu) event and the item is already selected
+        const isRightClick = e.type === 'contextmenu';
+        const isSameRowSelected = this.lastSelectedRow === item;
+        // Check if the row contains the class "no-files-found"
+        if (item.classList.contains('no-files-found')) {
+            // Prevent any selection or checkbox interaction
+            e.preventDefault();
+            return;
+        }
+        if (isRightClick && isSameRowSelected) {
+            // Prevent deselection with right-click
+            e.preventDefault();
+            return;
+        }
         // Handle checkbox interaction
-        else if(item && e.target.tagName === 'INPUT')
-        {
-            checkbox.checked = isChecked;
+        if (e.target.classList.contains('select') || e.target.tagName === 'LABEL') {
+            checkbox.checked = !isChecked;
 
-            // Toggle row selection and show/hide file details based on checkbox state
-            if(checkbox.checked)
-            {
+            // Toggle row selection based on checkbox state
+            if (checkbox.checked) {
                 item.classList.add('row');
                 let id = item.getAttribute('id').replace("tr_", "");
                 file_details.show(id);
@@ -119,19 +110,46 @@ const table = {
                 item.classList.remove('row');
                 file_details.hide();
             }
-
-            // Uncheck other rows if unchecking the checkbox
-            const isUnchecking = isChecked && !checkbox.checked;
-
-            if (isUnchecking) {
-                const selectedRow = document.querySelector('.row');
-                if (selectedRow === item) {
-                    file_details.hide();
+        } else {
+            const selectedRow = document.querySelector('.row');
+            // Deselect the row if it's already selected
+            if (selectedRow && selectedRow === item) 
+            {
+              selectedRow.classList.remove('row');
+              const checkboxes = document.querySelectorAll('.table-body .select');
+                for (const cb of checkboxes) {
+                    cb.checked = false;
                 }
-                selectedRow.classList.remove('row');
-                selectedRow.querySelector('.select').checked = false;
+              file_details.hide();
+            } else {
+                // Deselect all previously selected checkboxes and rows
+                const selectedRows = document.querySelectorAll('.row');
+                for (const row of selectedRows) {
+                    row.classList.remove('row');
+                }
+                const checkboxes = document.querySelectorAll('.table-body .select');
+                for (const cb of checkboxes) {
+                    cb.checked = false;
+                }
+                item.classList.add('row');
+                checkbox.checked = true;
+                let id = item.getAttribute('id').replace("tr_", "");
+                file_details.show(id);
             }
         }
+        // Update lastSelectedRow
+        if (checkbox.checked) {
+            table.lastSelectedRow = item;
+        } else {
+            table.lastSelectedRow = null;
+        }
+        // Check if all checkboxes in the tbody are checked and update selectAllCheckbox
+        const allChecked = Array.from(tbodyCheckboxes).every((cb) => !cb.checked);
+        selectAllCheckbox.checked = !allChecked;
+    },
+    // Function to get the last selected row
+    getLastSelectedRow: function () {
+        return table.lastSelectedRow;
     },
 
     toggleAll:function(e) 
@@ -193,7 +211,6 @@ const table = {
                     let tbody = document.querySelector(".table-body");
                     tbody.innerHTML = "";
 
-                    
                     let obj = JSON.parse(xm.responseText);
 
                     // Display Name
@@ -247,7 +264,8 @@ const table = {
 
                     if(obj.success && obj.data_type == "get_files")
                     {
-
+                        const selectAll = document.getElementsByClassName('selectAll')[0];
+                        selectAll.classList.remove("hidden");
                         table.ROWS = obj.rows;
             
                         // Generate table rows dynamically
@@ -266,24 +284,27 @@ const table = {
                             tr.setAttribute('folder_id',+ obj.rows[i].id);
 
                             tr.innerHTML = `
-                                <td><input type="checkbox" class="select" onchange="table.select(event)"></td>
+                                <td>
+                                    <input type="checkbox" class="select custom-checkbox" onchange="table.select(event)">
+                                    <label></label>
+                                </td>
                                 <td>${obj.rows[i].icon}</td>
                                 <td>${obj.rows[i].file_name}</td>
                                 <td>${obj.rows[i].file_size}</td>
                                 <td>${obj.rows[i].date_updated}</td>
-                                <td>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" transform="rotate(90)" style="fill: rgba(0, 0, 0, 1);">
-                                        <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
-                                    </svg>
-                                </td>
+                                <td></td>
                             `;
                             tbody.appendChild(tr);
                         }
-
                     } else {
-                        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center">No files found!</td></tr>`;
+                        // If there are no files, create the "No files found!" row
+                        const noFilesRow = document.createElement('tr');
+                        noFilesRow.innerHTML = `<td colspan="10" style="text-align:center" class="no-files-row">No files found!</td>`;
+                        tbody.appendChild(noFilesRow);
+                        
+                        const selectAll = document.getElementsByClassName('selectAll')[0];
+                        selectAll.classList.add("hidden");
                     }
-
                 } else {
                     console.log(xm.responseText);
                 }
@@ -293,32 +314,6 @@ const table = {
         // Open a POST request api.php and send the FormData
         xm.open('post', '../api.php', true);
         xm.send(data);
-    },
-
-    logout: function() 
-    {
-        let data = new FormData();
-        data.append('data_type', 'user_signout');
-
-        let xm = new XMLHttpRequest();
-			xm.addEventListener('readystatechange',function()
-            {
-				if(xm.readyState == 4)
-				{
-					if(xm.status == 200)
-					{
-						//console.log(xm.responseText);
- 						window.location.href = '../view/auth/login.php';
- 
-					}else{
-						console.log(xm.responseText);
-					}
-
-				}
-			});
-
-			xm.open('post', '../api.php', true);
-			xm.send(data);
     },
 };
 
@@ -398,6 +393,7 @@ const upload = {
             upload.uploading = false;
             return;
         }
+
         for (let i = 0; i < files.length; i++) {
             const fileIndex = fileIndexCounter++;
             const file = files[i];
