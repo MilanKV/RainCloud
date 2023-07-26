@@ -280,9 +280,14 @@ const table = {
                                 tr.setAttribute('type','file');
                             }
 
-                            if(obj.rows[i].file_type == 'folder')
-                            tr.setAttribute('folder_id',+ obj.rows[i].id);
-
+                            if(obj.rows[i].file_type == 'folder') {
+                                tr.setAttribute('folder_id',+ obj.rows[i].id);
+                                // Format folder size using the formatFolderSize function for folders
+                                folderSizeCell = `<td>${formatSize(obj.rows[i].file_size)}</td>`;
+                            } else {
+                                // Keep the original file_size for files
+                                folderSizeCell = `<td>${formatSize(obj.rows[i].file_size)}</td>`;
+                            }
                             tr.innerHTML = `
                                 <td>
                                     <input type="checkbox" class="select custom-checkbox" onchange="table.select(event)">
@@ -290,7 +295,7 @@ const table = {
                                 </td>
                                 <td>${obj.rows[i].icon}</td>
                                 <td>${obj.rows[i].file_name}</td>
-                                <td>${obj.rows[i].file_size}</td>
+                                ${folderSizeCell}
                                 <td>${obj.rows[i].date_updated}</td>
                                 <td></td>
                             `;
@@ -855,7 +860,7 @@ function formatSize(bytes) {
     } else if (bytes >= 1024) {
         return (bytes / 1024).toFixed(2) + ' KB';
     } else {
-        return bytes + ' B';
+        return '';
     }
 }
 

@@ -54,10 +54,21 @@ function fetchUserId($email)
 }
 
 // Function to check if a file already exists in the database by its name
-function checkFileExists($filename)
+function checkFileExists($filename, $folder_id)
 {
     $filename = addslashes($filename);
-    $query = "SELECT id FROM drive WHERE file_name = '$filename' LIMIT 1";
+    $folder_id = intval($folder_id);
+
+    $query = "SELECT id FROM drive WHERE file_name = '$filename' AND folder_id = '$folder_id' LIMIT 1";
+    $row = query($query);
+    return !empty($row);
+}
+
+// Function to check if a folder already exists in the database by its name for a specific user
+function checkFolderExists($folder_name, $user_id, $parent_folder_id)
+{
+    $folder_name = addslashes($folder_name);
+    $query = "SELECT id FROM folders WHERE name = '$folder_name' AND user_id = '$user_id' AND parent = '$parent_folder_id' LIMIT 1";
     $row = query($query);
     return !empty($row);
 }

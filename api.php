@@ -58,8 +58,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
                         'size' => $_FILES['files']['size'][$index]
                     ];
 
-                    // Check if the file already exists in the database
-                    if (checkFileExists($file['name'])) {
+                    // Check if the file already exists in the database for the specific folder
+                    $folder_id = $_POST['folder_id'] ?? 0;
+                    if (checkFileExists($file['name'], $folder_id)) {
                         continue; // Skip this file and proceed with the next one
                     }
 
@@ -69,9 +70,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
                         continue;
                     }
 
-                    $destination = $folder. time() . $file['name'];
-                    if(file_exists($destination))
-                        $destination = $folder. time() . rand(0,9999) . $file['name'];
+                    $uniqueFilename = uniqid('', true) . '_' . $file['name'];
+                    $destination = $folder . $uniqueFilename;
         
                     move_uploaded_file($file['tmp_name'], $destination);
                     
@@ -156,13 +156,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
                     $row['file_name'] = $row['name'];
                     $row['date_created'] = $row['date_created'];
                     $row['date_updated'] = $row['date_updated'];
+
+                    // Get the folder size if it's a folder
+                    if ($row['file_type'] == 'folder') {
+                        $folder_id = $row['id'];
+                        $row['file_size'] = getFolderSize($folder_id);
+                    }
                 }
 
                 $part = explode(".", $row['file_name']);
                 $ext = strtoLower(end($part));
                 $row['icon'] = get_icon($row['file_type'], $ext);
-                $file_size = round($row['file_size'] / (1024 * 1024), 2);
-                $row['file_size'] = ($file_size >= 1) ? number_format($file_size, 2) . "MB" : number_format($row['file_size'] / 1024, 2) . "KB";
                 $row['date_updated'] = get_date($row['date_updated']);
                 $row['date_created'] = get_date($row['date_created']);
             }
@@ -282,20 +286,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
         $user_id = fetchUserId($logged_in);
 
         if($user_id !== null) {
-            
-            // Save to database
             $name = addslashes($_POST['name']);
-            $date_created = date("Y-m-d H:i:s");
-            $date_updated = date("Y-m-d H:i:s");
             $parent = $_POST['folder_id'] ?? 0;
+            
+            if (checkFolderExists($name, $user_id, $parent)) {
+                $info['success'] = false;
+                $info['message'] = "A folder with the same name already exists.";
+        } else {
+                // Save to database
+                $date_created = date("Y-m-d H:i:s");
+                $date_updated = date("Y-m-d H:i:s");
 
-            $query = "INSERT INTO folders 
-            (name, user_id, parent, date_created, date_updated) VALUES ('$name', '$user_id', '$parent', '$date_created', '$date_updated')";
+                $query = "INSERT INTO folders 
+                (name, user_id, parent, date_created, date_updated) VALUES ('$name', '$user_id', '$parent', '$date_created', '$date_updated')";
 
-            query($query);
+                query($query);
 
-            $info['success'] = true;
-
+                $info['success'] = true;
+                $info['message'] = "Folder created successfully.";
+            }
         } else {
             $info['success'] = false;
             $info['message'] = "User not found";
