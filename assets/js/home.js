@@ -192,6 +192,24 @@ const table = {
         }
     },
 
+    soft_delete: function() {
+        const selectedRow = document.querySelector('.row');
+        if(!selectedRow) {
+            alert("Please select a row to delete!");
+            return;
+        }
+        if(!confirm("Are you sure you want to delete this file?!")) {
+            return;
+        }
+        let obj = {};
+        obj.data_type = 'soft_delete';
+        obj.file_type = selectedRow.getAttribute('type');
+        console.log(obj.file_type);
+        let id = selectedRow.getAttribute('id').replace("tr_", "");
+        obj.id = table.ROWS[id].id;
+        createModal.send(obj);
+    },
+
     refresh: function() 
     {
         let data = new FormData();
@@ -697,9 +715,10 @@ var file_details = {
 
         // Get the truncated file name (maximum 20 characters)
         let truncatedFileName = truncateString(row.file_name, 20);
+        let formatFileSize = formatSize(row.file_size);
         // Update the file details in the panel
         file_details_panel.querySelector(".file_name").textContent = truncatedFileName;
-        file_details_panel.querySelector(".size").textContent = row.file_size;
+        file_details_panel.querySelector(".size").textContent = formatFileSize;
         file_details_panel.querySelector(".type").textContent = row.file_type;
         file_details_panel.querySelector(".date_created").textContent = row.date_created;
         file_details_panel.querySelector(".date_updated").textContent = row.date_updated;

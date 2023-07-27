@@ -36,23 +36,6 @@ function query($query)
     }
     return false;
 }
-
-function fetchUserId($email)
-{
-    $email = mysqli_real_escape_string(db_connect(), $email);
-
-    $user_query = "SELECT id FROM users WHERE email = '$email'";
-    $user_result = query($user_query);
-
-    if($user_result && count($user_result) > 0) {
-        $user_row = $user_result[0];
-        
-        return $user_row['id'];
-    }
-
-    return null;
-}
-
 // Function to check if a file already exists in the database by its name
 function checkFileExists($filename, $folder_id)
 {
