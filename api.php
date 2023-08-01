@@ -97,6 +97,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
     } else 
     if($_POST['data_type'] == "get_files") 
     {
+        $selectedPage = $_POST['selected_page'] ?? 'home';
         $user_id = $_SESSION['RAIN_USER']['id'] ?? null;
         $folder_id = $_POST['folder_id'] ?? 0;
 
@@ -120,8 +121,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
             $num++;
         }
 
-        $query_folder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' ORDER BY id DESC LIMIT 10";
-        $query = "SELECT * FROM drive WHERE user_id = '$user_id' && folder_id = '$folder_id' ORDER BY id DESC LIMIT 10";
+        if ($selectedPage === 'home') {
+            $query_folder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' && soft_delete = 0 ORDER BY id DESC LIMIT 10";
+            $query = "SELECT * FROM drive WHERE user_id = '$user_id' && folder_id = '$folder_id' && soft_delete = 0 ORDER BY id DESC LIMIT 10";
+
+        } elseif ($selectedPage === 'deleted') {
+            $query_folder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' && soft_delete = 1 ORDER BY id DESC LIMIT 10";
+            $query = "SELECT * FROM drive WHERE user_id = '$user_id' && folder_id = '$folder_id' && soft_delete = 1 ORDER BY id DESC LIMIT 10";
+        } else {
+            $query_folder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' ORDER BY id DESC LIMIT 10";
+            $query = "SELECT * FROM drive WHERE user_id = '$user_id' && folder_id = '$folder_id' ORDER BY id DESC LIMIT 10";
+        }
 
         $rows_folder = query($query_folder);
         $rows = query($query);
@@ -299,59 +309,101 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
             $user_id = $_SESSION['RAIN_USER']['id'];
 
             if($file_type == 'folder') {
-                $query = "UPDATE folders SET soft_delete = 1 WHERE id = '$id' && user_id = '$user_id' LIMIT 1"; 
+                recursiveSoftDelete($id, $user_id);
             } else {
                 $query = "UPDATE drive SET soft_delete = 1 WHERE id = '$id' && user_id = '$user_id' LIMIT 1";
-            }
-            query($query, [$id, $user_id]);
+                $queryResult = query($query, [$id, $user_id]);
 
-            // Check if the query was successful
-            if ($query !== false) {
-                $info['success'] = true;
-            } else {
-                $info['success'] = false;
-                $info['message'] = "Error: Failed to soft delete the row!";
-        }
-        } else if($_POST['data_type'] == "hard_delete") {
-            // Hard delete
-            if (isset($_POST['id'], $_POST['file_type'])) {
-                $id = $_POST['id'];
-                $file_type = $_POST['file_type'];
-                $user_id = $_SESSION['RAIN_USER']['id'];
-
-                if($file_type == 'folder') {
-
+                if ($queryResult) {
+                    $info['success'] = true;
+                    $info['message'] = "File/Folder deleted successfully.";
                 } else {
-                    $query = "SELECT * FROM drive WHERE id = '$id' && user_id = '$user_id' LIMIT 1";
-                    $row = query($query, [$id, $user_id]);
-
-                    if($row) {
-                        $file_path = $row[0]['file_path'];
-                        $query = "DELETE FROM drive WHERE id = '$id' && user_id = '$user_id' LIMIT 1";
-                        query($query, [$id, $user_id]);
-
-                        if($query !== false) {
-                            // The file record was deleted from the database, now delete the actual file.
-                            if(file_exists($file_path)) {
-                                unlink($file_path);
-                            }
-                            $info['success'] = true;
-                        } else {
-                            $info['success'] = false;
-                            $info['message'] = "Error: Failed to hard delete the row!";
-                        }
-                    } else {
-                        $info['success'] = false;
-                        $info['message'] = "Error: File not found!";
-                    }
+                    $info['success'] = false;
+                    $info['message'] = "Failed to delete the file/folder.";
+                    $info['query_error'] = $queryResult;
                 }
+            }
+        }
+    } else
+    if ($_POST['data_type'] == "hard_delete") {
+        if (isset($_POST['id'], $_POST['file_type'])) {
+            $ids = $_POST['id'];
+            $file_types = $_POST['file_type'];
+            $user_id = $_SESSION['RAIN_USER']['id'];
+            $successCount = 0;
+
+            for ($i = 0; $i < count($ids); $i++) {
+                $id = $ids[$i];
+                $file_type = $file_types[$i];
+
+                if ($file_type == 'folder') {
+                    recursiveHardDelete($id, $user_id);
+                } else {
+                    // For files, perform the hard delete
+                    $query = "DELETE FROM drive WHERE id = '$id' && user_id = '$user_id' && soft_delete = 1 LIMIT 1";
+                    $queryResult = query($query);
+
+                    if ($queryResult) {
+                        $successCount++;
+                    }
+                }            
+            }
+            if ($successCount == count($ids)) {
+                $info['success'] = true;
+                $info['message'] = "File/Folder permanently deleted.";
             } else {
                 $info['success'] = false;
-                $info['message'] = "Error: Missing 'id' or 'file_type' in the request!"; 
+                $info['message'] = "Missing 'id' or 'file_type' in the request.";
             }
+        } else {
+            $info['success'] = false;
+            $info['message'] = "Missing 'id' or 'file_type' in the request.";
         }
     }
 } 
+// Soft delete
+function recursiveSoftDelete($folder_id, $user_id) {
+    // Soft delete files inside the current folder
+    $query = "UPDATE drive SET soft_delete = 1 WHERE folder_id = '$folder_id' && user_id = '$user_id'";
+    query($query);
+
+    // Soft delete the current folder
+    $query = "UPDATE folders SET soft_delete = 1 WHERE id = '$folder_id' && user_id = '$user_id' LIMIT 1";
+    query($query);
+
+    // Get subfolders of the current folder
+    $query = "SELECT id FROM folders WHERE parent = '$folder_id'";
+    $subFolders = query($query);
+
+    if (is_array($subFolders)) {
+        foreach ($subFolders as $subFolder) {
+            $subFolderID = $subFolder['id'];
+            recursiveSoftDelete($subFolderID, $user_id);
+        }
+    }
+}
+// Hard delete
+function recursiveHardDelete($folder_id, $user_id)
+{
+    // First, hard delete all files inside the current folder
+    $query = "DELETE FROM drive WHERE folder_id = '$folder_id' && user_id = '$user_id'";
+    query($query);
+
+    // Next, recursively hard delete subfolders and their contents
+    $query = "SELECT id FROM folders WHERE parent = '$folder_id'";
+    $subFolders = query($query);
+
+    if (is_array($subFolders)) {
+        foreach ($subFolders as $subFolder) {
+            $subFolderID = $subFolder['id'];
+            recursiveHardDelete($subFolderID, $user_id);
+        }
+    }
+
+    // Finally, hard delete the current folder
+    $query = "DELETE FROM folders WHERE id = '$folder_id' && user_id = '$user_id' LIMIT 1";
+    query($query);
+}
 
 header('Content-Type: application/json');
 

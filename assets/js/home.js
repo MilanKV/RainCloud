@@ -215,6 +215,7 @@ const table = {
         let data = new FormData();
         data.append('data_type', 'get_files');
         data.append('folder_id', FOLDER_ID);
+        data.append('selected_page', 'home');
 
         let xm = new XMLHttpRequest();
         xm.addEventListener('readystatechange', function() 
@@ -807,6 +808,8 @@ const createModal = {
                 if(xm.status == 200)
                 {
                     let obj = JSON.parse(xm.responseText);
+                    console.log("Response Status:", xm.status);
+                    console.log("API Response:", obj);
                     if(obj.success)
                     {
                         table.refresh();

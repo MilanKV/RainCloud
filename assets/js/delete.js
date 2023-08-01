@@ -37,8 +37,8 @@ const table = {
             // Toggle row selection based on checkbox state
             if (checkbox.checked) {
                 item.classList.add('row');
-                let id = item.getAttribute('id').replace("tr_", "");
-                file_details.show(id);
+                let tr_id = item.getAttribute('tr_id').replace("tr_", "");
+                file_details.show(tr_id);
             } else {
                 item.classList.remove('row');
                 file_details.hide();
@@ -66,8 +66,8 @@ const table = {
                 }
                 item.classList.add('row');
                 checkbox.checked = true;
-                let id = item.getAttribute('id').replace("tr_", "");
-                file_details.show(id);
+                let tr_id = item.getAttribute('tr_id').replace("tr_", "");
+                file_details.show(tr_id);
             }
         }
         // Update lastSelectedRow
@@ -101,21 +101,49 @@ const table = {
             }
         }
     },
-    hard_delete: function() {
-        const selectedRow = document.querySelector('.row');
-        if(!selectedRow) {
-            alert("Please select a row to delete!");
+
+    // Function to handle hard delete
+    hard_delete: function () {
+        const selectedRows  = document.querySelectorAll('.row');
+        if (selectedRows.length === 0) {
+            alert('No items selected for hard delete.');
             return;
         }
-        if(!confirm("Are you sure you want to permanent delete this file?!")) {
+        // console.log(`Hard deleting row with id: ${id} and type: ${type}`);
+        const confirmDelete = confirm('Are you sure you want to delete the selected items?');
+        if (!confirmDelete) {
             return;
         }
-        let obj = {};
-        obj.data_type = 'hard_delete';
-        obj.file_type = selectedRow.getAttribute('type');
-        let id = selectedRow.getAttribute('id').replace("tr_", "");
-        obj.id = table.ROWS[id].id;
-        createModal.send(obj);
+
+        const data = new FormData();
+        data.append('data_type', 'hard_delete');
+
+        for (const row of selectedRows) {
+            let type = row.getAttribute('type').toString();
+            let id = row.getAttribute('id').toString();
+            data.append('id[]', id);
+            data.append('file_type[]', type);
+        }
+
+        const xm = new XMLHttpRequest();
+        xm.addEventListener('readystatechange', function () {
+            if (xm.readyState === 4) {
+                // console.log(xm.responseText);
+                if (xm.status === 200) {
+                    const response = JSON.parse(xm.responseText);
+                    if (response.success) {
+                        table.refresh();
+                    } else {
+                        alert('Failed to hard delete the selected items.');
+                    }
+                } else {
+                    alert('Failed to communicate with the server.');
+                }
+            }
+        });
+        // Open a POST request api.php and send the FormData
+        xm.open('post', '../api.php', true);
+        xm.send(data);
     },
 
     refresh: function() 
@@ -123,7 +151,7 @@ const table = {
         let data = new FormData();
         data.append('data_type', 'get_files');
         data.append('folder_id', FOLDER_ID);
-        data.append('page', 'deleted');
+        data.append('selected_page', 'deleted');
 
         let xm = new XMLHttpRequest();
         xm.addEventListener('readystatechange', function() 
@@ -132,7 +160,7 @@ const table = {
             {
                 if(xm.status == 200)
                 {
-                    console.log(JSON.stringify(JSON.parse(xm.responseText), null, 2));
+                    // console.log(JSON.stringify(JSON.parse(xm.responseText), null, 2));
                     // Recreate table
                     let tbody = document.querySelector(".table-body");
                     tbody.innerHTML = "";
@@ -169,9 +197,10 @@ const table = {
                         for(var i = 0; i < obj.rows.length; i++)
                         {
                             let tr = document.createElement('tr');
-                            tr.setAttribute('id','tr_'+i);
-                            
-                            if(obj.rows[i].file_type == 'folder') {
+                            tr.setAttribute('tr_id', 'tr_' + i);
+                            tr.setAttribute('id', obj.rows[i].id);
+
+                            if(obj.rows[i].file_type === 'folder') {
                                 tr.setAttribute('type','folder');
                             } else {
                                 tr.setAttribute('type','file');
@@ -220,10 +249,10 @@ const table = {
 
 var file_details = {
     
-    show:function(id) 
+    show:function(tr_id) 
     {
         document.querySelector(".no-file-checked").classList.add("hidden");
-        let row = table.ROWS[id];
+        let row = table.ROWS[tr_id];
         
         let file_details_panel = document.querySelector(".body-container");
         const fileImage = document.getElementById("file_image");

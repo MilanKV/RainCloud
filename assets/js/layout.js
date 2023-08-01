@@ -72,5 +72,37 @@ function updateSpaceInfo(obj) {
     document.querySelector(".rain_space").innerHTML = `${space_occupied_formatted} of ${obj.space_total} GB used`;
     document.querySelector(".space_percent").style.width = `${space_percent}%`;
 }
+
+// Define the sendSelectedPageToApi function to send the selected page information to api.php
+function sendSelectedPageToApi(page) {
+    let data = new FormData();
+    data.append('data_type', 'selected_page');
+    data.append('selected_page', page);
+
+    let xm = new XMLHttpRequest();
+    xm.addEventListener('readystatechange', function() {
+        if (xm.readyState == 4) {
+            if (xm.status == 200) {
+                // You can handle the API response here if needed
+                // For example, you can parse the response using JSON.parse(xm.responseText)
+                // or simply ignore the response if you don't need it.
+            } else {
+                console.log("Error sending selected page information to API.");
+            }
+        }
+    });
+
+    xm.open('post', '../api.php', true);
+    xm.send(data);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Get the current page from the URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get("page") || "home"; // Default to "home" if no page parameter is present
+    // console.log(currentPage);
+    // Call the sendSelectedPageToApi function to send the selected page information to api.php
+    sendSelectedPageToApi(currentPage);
+});
     
 window.updateSpaceInfo = updateSpaceInfo;
