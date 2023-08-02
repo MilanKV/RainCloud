@@ -104,8 +104,8 @@ const table = {
             // Toggle row selection based on checkbox state
             if (checkbox.checked) {
                 item.classList.add('row');
-                let id = item.getAttribute('id').replace("tr_", "");
-                file_details.show(id);
+                let tr_id = item.getAttribute('tr_id').replace("tr_", "");
+                file_details.show(tr_id);
             } else {
                 item.classList.remove('row');
                 file_details.hide();
@@ -133,8 +133,8 @@ const table = {
                 }
                 item.classList.add('row');
                 checkbox.checked = true;
-                let id = item.getAttribute('id').replace("tr_", "");
-                file_details.show(id);
+                let tr_id = item.getAttribute('tr_id').replace("tr_", "");
+                file_details.show(tr_id);
             }
         }
         // Update lastSelectedRow
@@ -146,6 +146,13 @@ const table = {
         // Check if all checkboxes in the tbody are checked and update selectAllCheckbox
         const allChecked = Array.from(tbodyCheckboxes).every((cb) => !cb.checked);
         selectAllCheckbox.checked = !allChecked;
+
+        const brwsButtons = document.querySelector(".hidden-btn");
+        if (document.querySelector(".row") || document.querySelector(".table-body .select:checked")) {
+            brwsButtons.classList.remove("hidden");
+        } else {
+            brwsButtons.classList.add("hidden");
+        }
     },
     // Function to get the last selected row
     getLastSelectedRow: function () {
@@ -166,6 +173,12 @@ const table = {
             } else {
                 item.classList.remove("row");
             }
+        }
+        const brwsButtons = document.querySelector(".hidden-btn");
+        if (document.querySelector(".table-body .select:checked")) {
+            brwsButtons.classList.remove("hidden");
+        } else {
+            brwsButtons.classList.add("hidden");
         }
     },
 
@@ -193,21 +206,47 @@ const table = {
     },
 
     soft_delete: function() {
-        const selectedRow = document.querySelector('.row');
-        if(!selectedRow) {
-            alert("Please select a row to delete!");
+        const selectedRows = document.querySelectorAll('.row');
+        if (selectedRows.length === 0) {
+            alert('No item selected for soft delete.');
             return;
         }
-        if(!confirm("Are you sure you want to delete this file?!")) {
+        const confirmDelete = confirm('Are you sure you want to soft delete the selected item?');
+        if (!confirmDelete) {
             return;
         }
-        let obj = {};
-        obj.data_type = 'soft_delete';
-        obj.file_type = selectedRow.getAttribute('type');
-        console.log(obj.file_type);
-        let id = selectedRow.getAttribute('id').replace("tr_", "");
-        obj.id = table.ROWS[id].id;
-        createModal.send(obj);
+    
+        const data = new FormData();
+        data.append('data_type', 'soft_delete');
+    
+        for (const row of selectedRows) {
+            const type = row.getAttribute('type');
+            const id = row.getAttribute('id');
+            data.append('id[]', id);
+            data.append('file_type[]', type);
+        }
+    
+        const xm = new XMLHttpRequest();
+        xm.addEventListener('readystatechange', function () {
+            if (xm.readyState === 4) {
+                if (xm.status === 200) {
+                    const response = JSON.parse(xm.responseText);
+                    console.log("Response Status:", xm.status);
+                    console.log("API Response:", response);
+                    if (response.success) {
+                        table.refresh();
+                    } else {
+                        alert('Failed to soft delete the selected item.');
+                    }
+                } else {
+                    alert('Failed to communicate with the server.');
+                }
+            }
+        });
+        // Open a POST request api.php and send the FormData
+        xm.open('post', '../api.php', true);
+        xm.send(data);
+        table.refresh();
     },
 
     refresh: function() 
@@ -224,7 +263,6 @@ const table = {
             {
                 if(xm.status == 200)
                 {
-
                     // console.log(JSON.stringify(JSON.parse(xm.responseText), null, 2));
                     // Recreate table
                     let tbody = document.querySelector(".table-body");
@@ -291,7 +329,8 @@ const table = {
                         for(var i = 0; i < obj.rows.length; i++)
                         {
                             let tr = document.createElement('tr');
-                            tr.setAttribute('id','tr_'+i);
+                            tr.setAttribute('tr_id','tr_' + i);
+                            tr.setAttribute('id', obj.rows[i].id);
                             
                             if(obj.rows[i].file_type == 'folder') {
                                 tr.setAttribute('type','folder');
@@ -692,10 +731,10 @@ upload.uploadBtn();
 
 var file_details = {
     
-    show:function(id) 
+    show:function(tr_id) 
     {
         document.querySelector(".no-file-checked").classList.add("hidden");
-        let row = table.ROWS[id];
+        let row = table.ROWS[tr_id];
         
         let file_details_panel = document.querySelector(".body-container");
         const fileImage = document.getElementById("file_image");

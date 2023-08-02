@@ -32,7 +32,7 @@ function query($query, $params = array())
                 $paramTypes = '';
                 $bindParams = array();
 
-                foreach ($params as $param) {
+                foreach ($params as &$param) {
                     if (is_int($param)) {
                         $paramTypes .= 'i'; // integer
                     } elseif (is_double($param) || is_float($param)) {

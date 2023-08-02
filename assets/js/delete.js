@@ -102,9 +102,32 @@ const table = {
         }
     },
 
+    navigateFolder_id: function(folder_id) {
+        FOLDER_ID = parseInt(folder_id);
+        table.refresh();
+    },
+
+    navigateFolder: function(e) {
+
+        let item = e.target;
+
+        while(item.tagName != 'TR' && item.tagName != 'BODY') {
+            item = item.parentNode;
+        }
+        
+        if(item.tagName == 'TR') {
+            let folder_id = item.getAttribute("folder_id");
+            
+            if(folder_id) {
+                FOLDER_ID = parseInt(folder_id);
+                table.refresh();
+            }
+        }
+    },
+
     // Function to handle hard delete
     hard_delete: function () {
-        const selectedRows  = document.querySelectorAll('.row');
+        const selectedRows  = document.querySelectorAll('.row:not(#selectAll)');
         if (selectedRows.length === 0) {
             alert('No items selected for hard delete.');
             return;
@@ -119,8 +142,9 @@ const table = {
         data.append('data_type', 'hard_delete');
 
         for (const row of selectedRows) {
-            let type = row.getAttribute('type').toString();
-            let id = row.getAttribute('id').toString();
+            let type = row.getAttribute('type');
+            let id = row.getAttribute('id');
+            console.log("Debug: ID:", id, "File Type:", type);
             data.append('id[]', id);
             data.append('file_type[]', type);
         }
@@ -131,6 +155,8 @@ const table = {
                 // console.log(xm.responseText);
                 if (xm.status === 200) {
                     const response = JSON.parse(xm.responseText);
+                    console.log("Response Status:", xm.status);
+                    console.log("API Response:", response);
                     if (response.success) {
                         table.refresh();
                     } else {
@@ -183,7 +209,34 @@ const table = {
 
                         window.location.href = 'auth/login.php';
                     }
+                    // Update breadcrumbs
+                    const bcrumbs = document.querySelector('#breadcrumbs ul');
+                    bcrumbs.innerHTML = ''; // Clear existing breadcrumb items
 
+                    // Create the Deleted Files breadcrumb item
+                    const deletedItem = createBreadcrumbItem('Deleted Files', 0);
+                    bcrumbs.appendChild(deletedItem);
+
+                    // Add the remaining breadcrumb items from the 'obj.breadcrumbs' array in reverse order
+                    for (let i = obj.breadcrumbs.length - 1; i >= 0; i--) {
+                    const breadcrumbItem = createBreadcrumbItem(obj.breadcrumbs[i].name, obj.breadcrumbs[i].id);
+                    bcrumbs.appendChild(breadcrumbItem);
+                    }
+
+                    // Function to create a breadcrumb item
+                    function createBreadcrumbItem(name, id) {
+                    const breadcrumbItem = document.createElement('li');
+                    breadcrumbItem.classList.add('breadcrumb_item');
+                    const breadcrumbLink = document.createElement('a');
+                    breadcrumbLink.href = '#';
+                    breadcrumbLink.onclick = function() {
+                        table.navigateFolder_id(id);
+                    };
+                    breadcrumbLink.classList.add('breadcrumb_link');
+                    breadcrumbLink.textContent = name;
+                    breadcrumbItem.appendChild(breadcrumbLink);
+                    return breadcrumbItem;
+                    }
                     // Update Space
                     window.updateSpaceInfo(obj);
 

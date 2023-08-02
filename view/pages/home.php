@@ -2,7 +2,7 @@
 <div id="breadcrumbs" class="breadcrumb">
     <ul>
         <li class="breadcrumb_item">
-            <a href="#" onclick="table.navigateFolder_id(0)" class="breadcrumb_link">Home</a>
+            <a href="#" onclick="table.navigateFolder_id(0)" class="breadcrumb_link"></a>
         </li>
     </ul>
 </div>
@@ -49,6 +49,9 @@
                         </li>
                     </div>
                 </ul>
+            </div>
+            <div class="brws-buttons hidden-btn hidden">
+                <button class="btn" onclick="table.soft_delete()">Delete</button>
             </div>
         </div>
     </div>
