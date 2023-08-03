@@ -56,7 +56,7 @@ function query($query, $params = array())
             $result = $stmt->get_result();
 
             // If the result is not empty, fetch the rows
-            if ($result && $result->num_rows > 0) {
+            if ($result && mysqli_num_rows($result) > 0) {
                 $res = array();
                 while ($row = $result->fetch_assoc()) {
                     $res[] = $row;
@@ -74,27 +74,29 @@ function query($query, $params = array())
     } else {
         // If there are no parameters, execute the query directly
         $result = mysqli_query($conn, $query);
-
-        if($result) {
-            if (!is_bool($result) && mysqli_num_rows($result) > 0) {
-                $res = [];
-                
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $res[] = $row;
-                }
-                return $res;
+    
+        if ($result !== true && mysqli_num_rows($result) > 0) {
+            $res = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $res[] = $row;
             }
+            return $res;
+        }
+        if ($result === false) {
+            die("Database query returned false without an error: " . mysqli_error($conn));
         }
         return false;
     }
 }
 // Function to check if a file already exists in the database by its name
-function checkFileExists($filename, $folder_id)
+function checkFileExists($file_name, $user_id, $folder_id)
 {
-    $filename = addslashes($filename);
+    $file_name = addslashes($file_name);
+    $user_id = intval($user_id);
     $folder_id = intval($folder_id);
 
-    $query = "SELECT id FROM drive WHERE file_name = '$filename' AND folder_id = '$folder_id' LIMIT 1";
+    // Check if a file with the same name already exists for the same user and folder
+    $query = "SELECT id FROM drive WHERE file_name = '$file_name' AND user_id = '$user_id' AND folder_id = '$folder_id' AND soft_delete = 0 LIMIT 1";
     $row = query($query);
     return !empty($row);
 }
@@ -103,7 +105,11 @@ function checkFileExists($filename, $folder_id)
 function checkFolderExists($folder_name, $user_id, $parent_folder_id)
 {
     $folder_name = addslashes($folder_name);
-    $query = "SELECT id FROM folders WHERE name = '$folder_name' AND user_id = '$user_id' AND parent = '$parent_folder_id' LIMIT 1";
+    $user_id = intval($user_id);
+    $parent_folder_id = intval($parent_folder_id);
+
+    // Check if a folder with the same name already exists for the same user and parent folder
+    $query = "SELECT id FROM folders WHERE name = '$folder_name' AND user_id = '$user_id' AND parent = '$parent_folder_id' AND soft_delete = 0 LIMIT 1";
     $row = query($query);
     return !empty($row);
 }
