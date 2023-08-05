@@ -1,3 +1,11 @@
+<!-- breadcrumb -->
+<div id="breadcrumbs" class="breadcrumb">
+    <ul>
+        <li class="breadcrumb_item">
+            <a href="#" onclick="table.navigateFolder_id(0)" class="breadcrumb_link"></a>
+        </li>
+    </ul>
+</div>
 
 <!-- Home  -->
 <div class="home-content">
@@ -35,7 +43,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody id="table-body" class="table-body" onclick="table.select(event)">
+                <tbody id="table-body" class="table-body" onclick="table.select(event)" ondblclick="table.navigateFolder(event)">
                     <!-- <tr>
                         <td><input type="checkbox" class="select"></td>
                         <td>a</td>
