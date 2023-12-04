@@ -114,7 +114,7 @@ function getFolderPathRecursive($folder_id, $user_id) {
 
     // Append the user folder path
     $user_folder_name = $_SESSION['RAIN_USER']['folder_name'] ?? '';
-    $user_folder_path = 'storage/' . $user_folder_name;
+    $user_folder_path = 'storage/usersStorage/' . $user_folder_name;
     // Reverse the folder names array to get the correct order
     $folder_names = array_reverse($folder_names);
     // Join the folder names with slashes to form the folder path

@@ -19,8 +19,10 @@ $info = [
 ];
 
 $logged_in = $info['LOGGED_IN'];
-// Handle cases where login is required
+
 $without_login = ['user_signup', 'user_login'];
+
+// Handle cases where login is required
 if(!$info['LOGGED_IN'] && (!in_array($info['data_type'], $without_login))) {
     $response = json_encode($info);
     echo $response;
@@ -32,21 +34,21 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['data_type'])) {
 
     switch ($info['data_type']) {
         case 'upload_files':
-            return handleFileUpload($info);  // Upload
+            return handleFileUpload($info);  // Handle Upload
         case 'get_files':
-            return handleGetFiles($info);  // Get Table
+            return handleGetFiles($info);  // Handle Get Table
         case 'user_signup':
-            return handleUserSignup($info);  // SignUp
+            return handleUserSignup($info);  // Handle SignUp
         case 'user_login':
-            return handleUserLogin($info);  // Login
+            return handleUserLogin($info);  // Handle Login
         case 'user_signout':
-            return handleUserSignout($info);  // SignOut
+            return handleUserSignout($info);  // Handle SignOut
         case 'new_folder':
-            return handleNewFolder($info);  // Create Folder
+            return handleNewFolder($info);  // Handle Create Folder
         case 'soft_delete':
-            return handleSoftDelete($info);  // Soft Delete
+            return handleSoftDelete($info);  // Handle Soft Delete
         case 'hard_delete':
-            return handleHardDelete($info);  // Hard Delete
+            return handleHardDelete($info);  // Handle Hard Delete
         default:
             // Handle unknown data types or errors
             $info['success'] = false;
