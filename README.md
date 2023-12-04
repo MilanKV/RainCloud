@@ -1,6 +1,6 @@
 # RainCloud
 
-RainCloud is a cloud storage platform inspired by services like Dropbox and Google Cloud. It allows users to securely store and access their files from anywhere, using any device with an internet connection. This documentation will guide you through the installation, setup, and usage of RainCloud.
+RainCloud is a cloud storage platform inspired by services like Dropbox and Google Cloud. The project is intentionally built using only core web technologies without relying on frameworks. It emphasizes simplicity and efficiency, utilizing HTML, CSS, JavaScript, PHP, MySQL, and AJAX to provide users with a secure and accessible file storage solution. It allows users to securely store and access their files from anywhere, using any device with an internet connection. This documentation will guide you through the installation, setup, and usage of RainCloud.
 
 ## Features
 
