@@ -6,6 +6,7 @@ require_once __DIR__ . '/functions/user_functions.php';
 require_once __DIR__ . '/functions/file_functions.php';
 require_once __DIR__ . '/functions/folder_functions.php';
 require_once __DIR__ . '/functions/helpers.php';
+require_once __DIR__ . '/functions/delete_handler.php';
 
 $info = [
     'success' => false,
