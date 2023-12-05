@@ -15,8 +15,8 @@ const signup = {
         let button = document.querySelector(".sign-button");
         button.innerHTML = `Saving...`;
 
-        let myform = new FormData();
-		myform.append('data_type','user_signup');
+        let data = new FormData();
+		data.append('data_type','user_signup');
 
         // Get all inputs
         let inputs = e.currentTarget.querySelectorAll("input");
@@ -38,7 +38,7 @@ const signup = {
                 }
             }
 
-            myform.append(input.name, input.value.trim());
+            data.append(input.name, input.value.trim());
         }
 
         if (hasEmptyField) 
@@ -60,16 +60,12 @@ const signup = {
 
                 if(xm.status == 200)
                 {
-                    // console.log(xm.responseText);
-
                     let obj = JSON.parse(xm.responseText);
-                    
                     if(obj.success && obj.data_type == "user_signup")
                     {
                         alert("Your account was created!");
                         window.location = '../../view/auth/login.php';
                         console.log(window.location);
-
                     } else {
                         
                         // Empty old error messages
@@ -94,14 +90,14 @@ const signup = {
                     }
 
                 } else {
-                    console.log(xm.responseText);
+                    console.log("Response status:", xm.status);
+                    console.log("Response text:", xm.responseText);
                 }
             }    
         });
-
         // Open a POST request api.php and send the FormData
         xm.open('post', '../../api.php', true);
-        xm.send(myform);
+        xm.send(data);
     },
 }
 
@@ -122,8 +118,8 @@ const login = {
         let button = document.querySelector(".log-button");
         button.innerHTML = `Logging in...`;
 
-        let myform = new FormData(e.currentTarget);
-		myform.append('data_type','user_login');
+        let data = new FormData(e.currentTarget);
+		data.append('data_type','user_login');
 
         // Clear existing error messages
         let errorMessages = document.querySelectorAll(".error-message");
@@ -181,6 +177,6 @@ const login = {
 
         // Open a POST request api.php and send the FormData
         xm.open('post', '../../api.php', true);
-        xm.send(myform);
+        xm.send(data);
     },
 }
