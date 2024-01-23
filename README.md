@@ -2,6 +2,11 @@
 
 RainCloud is a cloud storage platform inspired by services like Dropbox and Google Cloud. The project is intentionally built using only core web technologies without relying on frameworks. It emphasizes simplicity and efficiency, utilizing HTML, CSS, JavaScript, PHP, MySQL, and AJAX to provide users with a secure and accessible file storage solution. It allows users to securely store and access their files from anywhere, using any device with an internet connection. This documentation will guide you through the installation, setup, and usage of RainCloud.
 
+![App Screenshot](https://github.com/MilanKV/RainCloud/blob/main/docs/Login.png) 
+![App Screenshot](https://github.com/MilanKV/RainCloud/blob/main/docs/Sign-Up.png) 
+![App Screenshot](https://github.com/MilanKV/RainCloud/blob/main/docs/RainCloud.png)
+![App Screenshot](https://github.com/MilanKV/RainCloud/blob/main/docs/RainCloud%20(1).png)
+
 ## Features
 
 - **Authentication:** Secure user authentication for enhanced data protection.
@@ -31,6 +36,8 @@ RainCloud is a cloud storage platform inspired by services like Dropbox and Goog
 - Open your web browser and access the RainCloud at
   ```bash
   http://localhost/RainCloud/view/auth/login.php
+- **Email:** admin@gmail.com
+- **Password:** admintest
 
 ## Usage
 1. **Login or Register** 
@@ -49,6 +56,7 @@ RainCloud is a cloud storage platform inspired by services like Dropbox and Goog
 ## Requirements
 - PHP 7.4.27 CLI
 - MySQL Database
+- Xampp Server
 
 ## License
 This project is licensed under the MIT License.
